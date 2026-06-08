@@ -153,14 +153,18 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
 /* EX PHOTOS */
 .ex-photos{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
-.ex-photo-wrap{position:relative;border-radius:12px;overflow:hidden;background:var(--bg3);border:1px solid var(--border);}
-.ex-photo-wrap img{width:100%;height:140px;object-fit:cover;display:block;}
-.ex-photo-fallback{width:100%;height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,var(--bg3),var(--card));}
+.ex-photo-wrap{position:relative;border-radius:12px;overflow:hidden;background:var(--bg3);border:1px solid var(--border);cursor:zoom-in;}
+.ex-photo-wrap img{width:100%;height:auto;display:block;}
+.ex-photo-fallback{width:100%;height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,var(--bg3),var(--card));}
 .ex-photo-fallback-icon{font-size:32px;opacity:0.5;}
 .ex-photo-fallback-text{font-size:10px;color:var(--text2);text-align:center;padding:0 8px;}
 .ex-photo-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.82));padding:6px 10px;font-size:11px;font-weight:700;color:#fff;text-align:center;letter-spacing:0.3px;}
 .ex-photo-label.start{background:linear-gradient(transparent,rgba(16,185,129,0.85));}
 .ex-photo-label.end{background:linear-gradient(transparent,rgba(108,99,255,0.85));}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;}
+.lightbox img{max-width:100%;max-height:85vh;border-radius:12px;object-fit:contain;}
+.lightbox-label{color:#fff;font-size:13px;font-weight:700;margin-top:12px;opacity:0.85;}
+.lightbox-close{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 
 /* TIPS */
 .tips-block{background:rgba(108,99,255,0.07);border:1px solid rgba(108,99,255,0.22);border-radius:12px;padding:13px;margin-bottom:12px;}
@@ -804,17 +808,35 @@ function TrainTab({workouts,setActiveWorkout}){
   );
 }
 
+// ── LIGHTBOX ──────────────────────────────────────────────────────────────────
+function Lightbox({src,label,onClose}){
+  useEffect(()=>{
+    const handler=e=>{if(e.key==='Escape')onClose();};
+    document.addEventListener('keydown',handler);
+    return()=>document.removeEventListener('keydown',handler);
+  },[onClose]);
+  return React.createElement('div',{className:'lightbox',onClick:onClose},
+    React.createElement('button',{className:'lightbox-close',onClick:onClose},'✕'),
+    React.createElement('img',{src,alt:label,onClick:e=>e.stopPropagation()}),
+    React.createElement('div',{className:'lightbox-label'},label)
+  );
+}
+
 // ── EXERCISE PHOTO ───────────────────────────────────────────────────────────
 function ExercisePhoto({src,labelText,labelClass,fallbackIcon,fallbackText}){
   const [err,setErr]=useState(false);
-  return React.createElement('div',{className:'ex-photo-wrap'},
-    err||!src
-      ?React.createElement('div',{className:'ex-photo-fallback'},
-        React.createElement('div',{className:'ex-photo-fallback-icon'},fallbackIcon||'🏋️'),
-        React.createElement('div',{className:'ex-photo-fallback-text'},fallbackText||'Зображення\nнедоступне')
-      )
-      :React.createElement('img',{src,alt:labelText,onError:()=>setErr(true)}),
-    React.createElement('div',{className:`ex-photo-label ${labelClass||''}`},labelText)
+  const [open,setOpen]=useState(false);
+  return React.createElement(React.Fragment,null,
+    React.createElement('div',{className:'ex-photo-wrap',onClick:()=>!err&&src&&setOpen(true)},
+      err||!src
+        ?React.createElement('div',{className:'ex-photo-fallback'},
+          React.createElement('div',{className:'ex-photo-fallback-icon'},fallbackIcon||'🏋️'),
+          React.createElement('div',{className:'ex-photo-fallback-text'},fallbackText||'Зображення\nнедоступне')
+        )
+        :React.createElement('img',{src,alt:labelText,onError:()=>setErr(true)}),
+      React.createElement('div',{className:`ex-photo-label ${labelClass||''}`},labelText)
+    ),
+    open&&React.createElement(Lightbox,{src,label:labelText,onClose:()=>setOpen(false)})
   );
 }
 
