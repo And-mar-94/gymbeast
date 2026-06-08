@@ -137,6 +137,33 @@ input[type=number]{-moz-appearance:textfield;}
 .quote-text{font-size:14px;font-style:italic;line-height:1.6;color:var(--text);}
 .quote-author{font-size:11px;color:var(--accent);margin-top:8px;font-weight:600;}
 
+/* WARMUP CONFIG */
+.warmup-toggle{display:flex;gap:0;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:16px;}
+.warmup-toggle-btn{flex:1;padding:12px;text-align:center;cursor:pointer;font-size:13px;font-weight:600;background:var(--bg2);color:var(--text2);border:none;transition:all 0.2s;}
+.warmup-toggle-btn.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;}
+.warmup-slider-row{margin-bottom:14px;}
+.warmup-slider-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px;}
+.warmup-slider-label span{color:var(--text2);}
+.warmup-slider-label strong{color:var(--text);font-size:14px;}
+input[type=range]{-webkit-appearance:none;width:100%;height:6px;border-radius:999px;background:var(--bg3);outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));cursor:pointer;box-shadow:0 0 6px rgba(108,99,255,0.5);}
+.warmup-cal-box{background:linear-gradient(135deg,rgba(239,68,68,0.12),rgba(245,158,11,0.08));border:1px solid rgba(239,68,68,0.3);border-radius:14px;padding:14px;text-align:center;margin:16px 0;}
+.warmup-cal-num{font-size:36px;font-weight:800;color:var(--red);}
+.warmup-cal-label{font-size:12px;color:var(--text2);margin-top:2px;}
+
+/* EX PHOTOS */
+.ex-photos{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.ex-photo-wrap{position:relative;border-radius:10px;overflow:hidden;background:var(--bg3);}
+.ex-photo-wrap img{width:100%;height:130px;object-fit:cover;display:block;}
+.ex-photo-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.75));padding:6px 8px;font-size:10px;font-weight:700;color:#fff;text-align:center;}
+
+/* TIPS */
+.tips-block{background:rgba(108,99,255,0.08);border:1px solid rgba(108,99,255,0.25);border-radius:12px;padding:12px;margin-bottom:12px;}
+.tips-title{font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;}
+.tip-item{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:5px;color:var(--text);}
+.tip-item:last-child{margin-bottom:0;}
+.tip-dot{color:var(--accent);flex-shrink:0;font-weight:700;}
+
 /* ACHIEVEMENTS */
 .ach-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .ach-item{background:var(--card2);border-radius:14px;padding:14px;text-align:center;border:1px solid var(--border);}
@@ -282,22 +309,42 @@ const LEVELS=[
 // ── EXERCISE META (images + calorie data) ────────────────────────────────────
 const BASE_IMG='https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/';
 const EXERCISE_META={
-  e1:{img:BASE_IMG+'Barbell_Bench_Press_-_Medium_Grip/images/0.jpg',met:6,spr:3},
-  e2:{img:BASE_IMG+'Dumbbell_One-Arm_Row/images/0.jpg',met:5.5,spr:3},
-  e3:{img:BASE_IMG+'Wide-Grip_Lat_Pulldown/images/0.jpg',met:5,spr:3},
-  e4:{img:BASE_IMG+'Dumbbell_Incline_Bench_Press/images/0.jpg',met:5.5,spr:3},
-  e5:{img:BASE_IMG+'Crunch/images/0.jpg',met:3.5,spr:2},
-  e6:{img:BASE_IMG+'Leg_Press/images/0.jpg',met:6,spr:3},
-  e7:{img:BASE_IMG+'Romanian_Deadlift/images/0.jpg',met:6,spr:4},
-  e8:{img:BASE_IMG+'Standing_Calf_Raises/images/0.jpg',met:3.5,spr:2.5},
-  e9:{img:BASE_IMG+'Dumbbell_Shoulder_Press/images/0.jpg',met:5,spr:3},
-  e10:{img:BASE_IMG+'Seated_Cable_Rows/images/0.jpg',met:5,spr:3},
-  e11:{img:BASE_IMG+'Side_Lateral_Raise/images/0.jpg',met:4,spr:2.5},
-  e12:{img:BASE_IMG+'Barbell_Curl/images/0.jpg',met:4.5,spr:2.5},
-  e13:{img:BASE_IMG+'Close-Grip_Barbell_Bench_Press/images/0.jpg',met:5.5,spr:3},
-  e14:{img:BASE_IMG+'Dumbbell_Alternate_Bicep_Curl/images/0.jpg',met:4,spr:2.5},
-  e15:{img:BASE_IMG+'Triceps_Pushdown_-_Rope_Attachment/images/0.jpg',met:4,spr:2.5},
-  e16:{img:BASE_IMG+'Lying_Leg_Hip_Raises/images/0.jpg',met:3.5,spr:2},
+  e1:{img:BASE_IMG+'Barbell_Bench_Press_-_Medium_Grip/images/0.jpg',img1:BASE_IMG+'Barbell_Bench_Press_-_Medium_Grip/images/1.jpg',met:6,spr:3},
+  e2:{img:BASE_IMG+'Dumbbell_One-Arm_Row/images/0.jpg',img1:BASE_IMG+'Dumbbell_One-Arm_Row/images/1.jpg',met:5.5,spr:3},
+  e3:{img:BASE_IMG+'Wide-Grip_Lat_Pulldown/images/0.jpg',img1:BASE_IMG+'Wide-Grip_Lat_Pulldown/images/1.jpg',met:5,spr:3},
+  e4:{img:BASE_IMG+'Dumbbell_Incline_Bench_Press/images/0.jpg',img1:BASE_IMG+'Dumbbell_Incline_Bench_Press/images/1.jpg',met:5.5,spr:3},
+  e5:{img:BASE_IMG+'Crunch/images/0.jpg',img1:BASE_IMG+'Crunch/images/1.jpg',met:3.5,spr:2},
+  e6:{img:BASE_IMG+'Leg_Press/images/0.jpg',img1:BASE_IMG+'Leg_Press/images/1.jpg',met:6,spr:3},
+  e7:{img:BASE_IMG+'Romanian_Deadlift/images/0.jpg',img1:BASE_IMG+'Romanian_Deadlift/images/1.jpg',met:6,spr:4},
+  e8:{img:BASE_IMG+'Standing_Calf_Raises/images/0.jpg',img1:BASE_IMG+'Standing_Calf_Raises/images/1.jpg',met:3.5,spr:2.5},
+  e9:{img:BASE_IMG+'Dumbbell_Shoulder_Press/images/0.jpg',img1:BASE_IMG+'Dumbbell_Shoulder_Press/images/1.jpg',met:5,spr:3},
+  e10:{img:BASE_IMG+'Seated_Cable_Rows/images/0.jpg',img1:BASE_IMG+'Seated_Cable_Rows/images/1.jpg',met:5,spr:3},
+  e11:{img:BASE_IMG+'Side_Lateral_Raise/images/0.jpg',img1:BASE_IMG+'Side_Lateral_Raise/images/1.jpg',met:4,spr:2.5},
+  e12:{img:BASE_IMG+'Barbell_Curl/images/0.jpg',img1:BASE_IMG+'Barbell_Curl/images/1.jpg',met:4.5,spr:2.5},
+  e13:{img:BASE_IMG+'Close-Grip_Barbell_Bench_Press/images/0.jpg',img1:BASE_IMG+'Close-Grip_Barbell_Bench_Press/images/1.jpg',met:5.5,spr:3},
+  e14:{img:BASE_IMG+'Dumbbell_Alternate_Bicep_Curl/images/0.jpg',img1:BASE_IMG+'Dumbbell_Alternate_Bicep_Curl/images/1.jpg',met:4,spr:2.5},
+  e15:{img:BASE_IMG+'Triceps_Pushdown_-_Rope_Attachment/images/0.jpg',img1:BASE_IMG+'Triceps_Pushdown_-_Rope_Attachment/images/1.jpg',met:4,spr:2.5},
+  e16:{img:BASE_IMG+'Lying_Leg_Hip_Raises/images/0.jpg',img1:BASE_IMG+'Lying_Leg_Hip_Raises/images/1.jpg',met:3.5,spr:2},
+};
+
+// ── EXERCISE TIPS ────────────────────────────────────────────────────────────
+const EXERCISE_TIPS={
+  e1:['Зводь лопатки і притискай їх до лави весь підхід','Гриф опускай до нижньої частини грудей, не до шиї','Ступні плоско на підлозі — не піднімай п\'ятки','Контрольований опуск 2–3 сек, вибух нагору'],
+  e2:['Коліно і рука опорної сторони стоять на лаві','Тягни лікоть вгору — вище рівня спини','Без ротації тулуба — спина паралельна підлозі','Пауза у верхній точці 1 сек — відчуй скорочення спини'],
+  e3:['Спочатку потягни лопатки ВНИЗ — потім тягни рукою','Широкий хват зверху — зводь лікті до тулуба','Спина злегка відхилена назад (10–15°)','Торкайся грудей грифом у нижній точці'],
+  e4:['Нахил лави 30° — не більше, щоб навантаження на верхніх грудях','Гантелі сходяться майже разом у верхній точці','Повільно вниз 3 сек — відчуй розтягнення грудей','Лікті під кутом 45° до тулуба, не розводь широко'],
+  e5:['Поперек притиснутий до підлоги весь час','Скручуй ГРУДЬМИ до колін, а не шиєю та головою','Не тягни за голову — руки просто підтримують','Видих на підйомі, вдих на опусканні'],
+  e6:['Стопи на ширині плечей у ВЕРХНІЙ частині платформи','Коліна не зводити всередину — стежи в дзеркало','Не розгинай коліна до кінця — тримай напругу','Контрольований рух вниз, без падіння платформи'],
+  e7:['Спина пряма весь рух — НІЯКИХ округлень','Гантелі ковзають вздовж ніг, не відводь вперед','ПОВІЛЬНО вниз 3–4 сек — відчуй задню поверхню стегна','Рух у кульшовому суглобі, коліна злегка зігнуті'],
+  e8:['Повне розтягнення ікри внизу — пауза 1 сек обов\'язково','Повне скорочення вгорі — пауза 1 сек обов\'язково','Повільний темп 2 сек вниз / 2 сек вгору','На сходинці — більший діапазон руху = кращий результат'],
+  e9:['Вертикальна спинка лави — спина притиснута','Лікті не заводь за рівень плечей у нижній точці','Без читингу тулубом — тільки плечі працюють','Неповне розгинання вгорі — тримай напругу в дельтах'],
+  e10:['Сидячи прямо, без розгойдування тулубом','Тягни лікті назад і ВНИЗ до пояса','Зводь лопатки у кінцевій точці — пауза 1 сек','Повільно вперед — не давай вагі тягнути тулуб'],
+  e11:['ДУЖЕ ЛЕГКА ВАГА — техніка важливіша за кілограми','Лікоть злегка зігнутий і фіксований весь рух','Великий палець трохи вниз — як виливаєш склянку','Рух тільки до рівня плечей — вище не потрібно'],
+  e12:['Лікті притиснуті до тулуба — вони НЕ рухаються','Тільки передпліччя рухається вгору-вниз','Повне розгинання внизу — відчуй розтягнення біцепса','EZ-гриф знімає навантаження з кистей'],
+  e13:['Хват на ширині плечей — вужче = більше трицепс','Опускай гриф до нижньої грудини, не до шиї','Лікті тримай близько до тулуба весь рух','Повне розгинання вгорі — пауза для скорочення'],
+  e14:['Сидячи — краща ізоляція, менше читингу','Супінація кисті (розворот мізинцем вгору) при підйомі','Пік скорочення вгорі — тримай 1 сек','Почергово — поки один вгорі, другий повільно опускається'],
+  e15:['Корпус злегка нахилений вперед для стабільності','Лікті притиснуті до тулуба — не рухаються','Руки розходяться назовні в нижній точці (V-форма)','Повне розгинання — пауза 1 сек, відчуй трицепс'],
+  e16:['Поперек притиснутий до лави весь підхід','Ноги прямі або злегка зігнуті — тримай форму','Не допомагай інерцією — повільно і контрольовано','Повільно вниз — відчуй розтягнення низу преса'],
 };
 
 // ── STORAGE ──────────────────────────────────────────────────────────────────
@@ -730,6 +777,103 @@ function TrainTab({workouts,setActiveWorkout}){
   );
 }
 
+// ── WARMUP CONFIG ─────────────────────────────────────────────────────────────
+function WarmupConfig({bodyWeight,onDone}){
+  const [type,setType]=useState('treadmill'); // 'treadmill' | 'elliptical'
+  const [time,setTime]=useState(10);
+  // treadmill
+  const [speed,setSpeed]=useState(5.5); // km/h
+  const [incline,setIncline]=useState(5); // %
+  // elliptical
+  const [resistance,setResistance]=useState(5); // 1-10
+  const [ePace,setEPace]=useState(60); // rpm/стrides per min
+
+  const kcal=useMemo(()=>{
+    const bw=bodyWeight||90;
+    if(type==='treadmill'){
+      // ACSM walking formula: VO2(mL/kg/min) = 0.1*speed_mpm + 1.8*speed_mpm*grade + 3.5
+      const spm=speed*1000/60;
+      const vo2=0.1*spm+1.8*spm*(incline/100)+3.5;
+      const met=vo2/3.5;
+      return Math.round(met*bw*time/60);
+    } else {
+      // Elliptical: MET based on resistance + pace
+      const met=3.5+(resistance*0.28)+(ePace>70?0.8:ePace>50?0.4:0);
+      return Math.round(met*bw*time/60);
+    }
+  },[type,time,speed,incline,resistance,ePace,bodyWeight]);
+
+  return React.createElement('div',{className:'card',style:{margin:0}},
+    React.createElement('div',{className:'card-title'},'🔥 РОЗМИНКА — налаштуй кардіо'),
+    React.createElement('div',{className:'warmup-toggle'},
+      React.createElement('button',{className:`warmup-toggle-btn${type==='treadmill'?' active':''}`,onClick:()=>setType('treadmill')},'🏃 Бігова доріжка'),
+      React.createElement('button',{className:`warmup-toggle-btn${type==='elliptical'?' active':''}`,onClick:()=>setType('elliptical')},'🔄 Орбітрек')
+    ),
+
+    // TIME slider
+    React.createElement('div',{className:'warmup-slider-row'},
+      React.createElement('div',{className:'warmup-slider-label'},
+        React.createElement('span',null,'⏱ Час'),
+        React.createElement('strong',null,`${time} хв`)
+      ),
+      React.createElement('input',{type:'range',min:5,max:30,step:1,value:time,onChange:e=>setTime(+e.target.value)})
+    ),
+
+    type==='treadmill'&&React.createElement('div',null,
+      React.createElement('div',{className:'warmup-slider-row'},
+        React.createElement('div',{className:'warmup-slider-label'},
+          React.createElement('span',null,'💨 Швидкість'),
+          React.createElement('strong',null,`${speed.toFixed(1)} км/год`)
+        ),
+        React.createElement('input',{type:'range',min:3,max:8,step:0.5,value:speed,onChange:e=>setSpeed(+e.target.value)})
+      ),
+      React.createElement('div',{className:'warmup-slider-row'},
+        React.createElement('div',{className:'warmup-slider-label'},
+          React.createElement('span',null,'📐 Нахил'),
+          React.createElement('strong',null,`${incline}%`)
+        ),
+        React.createElement('input',{type:'range',min:0,max:15,step:1,value:incline,onChange:e=>setIncline(+e.target.value)})
+      )
+    ),
+
+    type==='elliptical'&&React.createElement('div',null,
+      React.createElement('div',{className:'warmup-slider-row'},
+        React.createElement('div',{className:'warmup-slider-label'},
+          React.createElement('span',null,'⚙️ Опір'),
+          React.createElement('strong',null,`${resistance}/10`)
+        ),
+        React.createElement('input',{type:'range',min:1,max:10,step:1,value:resistance,onChange:e=>setResistance(+e.target.value)})
+      ),
+      React.createElement('div',{className:'warmup-slider-row'},
+        React.createElement('div',{className:'warmup-slider-label'},
+          React.createElement('span',null,'🦶 Темп (кроків/хв)'),
+          React.createElement('strong',null,ePace<50?'Повільно':ePace<70?'Помірно':'Швидко')
+        ),
+        React.createElement('input',{type:'range',min:30,max:90,step:5,value:ePace,onChange:e=>setEPace(+e.target.value)})
+      )
+    ),
+
+    React.createElement('div',{className:'warmup-cal-box'},
+      React.createElement('div',{className:'warmup-cal-num'},`~${kcal}`),
+      React.createElement('div',{className:'warmup-cal-label'},'ккал за розминку'),
+      React.createElement('div',{style:{marginTop:8,fontSize:12,color:'var(--text2)'}},
+        type==='treadmill'
+          ?`${speed} км/год • ${incline}% нахил • ${time} хв`
+          :`Опір ${resistance}/10 • ${ePace<50?'повільно':ePace<70?'помірно':'швидко'} • ${time} хв`
+      )
+    ),
+
+    React.createElement('div',{style:{background:'rgba(59,130,246,0.08)',borderRadius:12,padding:12,marginBottom:12,fontSize:12,lineHeight:1.7,color:'var(--text2)'}},
+      React.createElement('div',{style:{fontWeight:700,color:'var(--blue)',marginBottom:4}},'💡 Для чого розминка?'),
+      React.createElement('div',null,'• Розігрів суглобів і м\'язів зменшує ризик травм'),
+      React.createElement('div',null,'• Пульс 110–120 уд/хв — ідеальний старт для силового'),
+      React.createElement('div',null,'• 3 хв суглобова гімнастика після кардіо обов\'язково')
+    ),
+
+    React.createElement('button',{className:'btn-primary',onClick:()=>onDone(kcal)},`✅ Розминка виконана (${kcal} ккал) — починаємо!`)
+  );
+}
+
 // ── WORKOUT SCREEN ────────────────────────────────────────────────────────────
 function WorkoutScreen({workout,onSave,onBack,workouts=[],weights=[]}){
   const day=TRAINING_DAYS[workout.dayId];
@@ -746,7 +890,11 @@ function WorkoutScreen({workout,onSave,onBack,workouts=[],weights=[]}){
   const [cardio,setCardio]=useState(workout.cardio||'medium');
   const [phase,setPhase]=useState('warmup');
   const [expandedEx,setExpandedEx]=useState(null);
-  const totalCals=useMemo(()=>calcWorkoutCalories({...workout,sets,cardio},bodyWeight),[sets,cardio,bodyWeight]);
+  const [warmupKcal,setWarmupKcal]=useState(0);
+  const totalCals=useMemo(()=>{
+    const base=calcWorkoutCalories({...workout,sets,cardio},bodyWeight);
+    return{...base,warmup:warmupKcal||base.warmup,total:(warmupKcal||base.warmup)+base.exercise+base.cardio};
+  },[sets,cardio,bodyWeight,warmupKcal]);
 
   const updateSet=(exId,si,field,value)=>{
     setSets(prev=>{const s=[...prev[exId]];s[si]={...s[si],[field]:value};return{...prev,[exId]:s};});
@@ -774,16 +922,7 @@ function WorkoutScreen({workout,onSave,onBack,workouts=[],weights=[]}){
     ),
 
     phase==='warmup'&&React.createElement('div',{style:{padding:'0 16px'}},
-      React.createElement('div',{className:'card',style:{margin:0}},
-        React.createElement('div',{className:'card-title'},'⏱ 10 хвилин — ОБОВ\'ЯЗКОВО'),
-        React.createElement('div',{style:{fontSize:14,lineHeight:1.8}},
-          day.warmup.split('\n').map((l,i)=>React.createElement('div',{key:i,style:{display:'flex',gap:8,marginBottom:6}},
-            React.createElement('span',{style:{color:'var(--accent)'}},`${i+1}.`),
-            React.createElement('span',null,l)
-          ))
-        ),
-        React.createElement('button',{className:'btn-primary',onClick:()=>setPhase('exercise')},'✅ Розминка виконана — починаємо!')
-      )
+      React.createElement(WarmupConfig,{bodyWeight,onDone:(kcal)=>{setWarmupKcal(kcal);setPhase('exercise');}})
     ),
 
     phase==='exercise'&&React.createElement('div',{style:{padding:'0 16px 16px'}},
@@ -822,13 +961,24 @@ function WorkoutScreen({workout,onSave,onBack,workouts=[],weights=[]}){
               )
             ),
             isExpanded&&React.createElement('div',{style:{marginTop:12}},
-              meta?.img&&React.createElement('img',{
-                src:meta.img,
-                alt:ex.name,
-                style:{width:'100%',borderRadius:10,marginBottom:10,maxHeight:180,objectFit:'cover',background:'var(--bg3)'},
-                onError:e=>{e.target.style.display='none';}
-              }),
+              meta?.img&&React.createElement('div',{className:'ex-photos'},
+                React.createElement('div',{className:'ex-photo-wrap'},
+                  React.createElement('img',{src:meta.img,alt:`${ex.name} — початок`,onError:e=>{e.target.parentElement.style.display='none';}}),
+                  React.createElement('div',{className:'ex-photo-label'},'▶ Початок')
+                ),
+                meta.img1&&React.createElement('div',{className:'ex-photo-wrap'},
+                  React.createElement('img',{src:meta.img1,alt:`${ex.name} — кінець`,onError:e=>{e.target.parentElement.style.display='none';}}),
+                  React.createElement('div',{className:'ex-photo-label'},'■ Кінець')
+                )
+              ),
               React.createElement('div',{className:'ex-hint'},ex.hint),
+              EXERCISE_TIPS[ex.id]&&React.createElement('div',{className:'tips-block'},
+                React.createElement('div',{className:'tips-title'},'💡 Техніка виконання'),
+                EXERCISE_TIPS[ex.id].map((tip,ti)=>React.createElement('div',{key:ti,className:'tip-item'},
+                  React.createElement('span',{className:'tip-dot'},'▸'),
+                  React.createElement('span',null,tip)
+                ))
+              ),
               React.createElement(MuscleDiagram,{muscles:ex.muscles}),
               rec&&React.createElement('div',{style:{background:`${rec.color}22`,border:`1px solid ${rec.color}55`,borderRadius:10,padding:'8px 12px',marginBottom:10,fontSize:12,color:rec.color,fontWeight:600}},
                 `💡 Рекомендована вага: ${rec.weight} кг — ${rec.hint}`
