@@ -152,17 +152,45 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .warmup-cal-label{font-size:12px;color:var(--text2);margin-top:2px;}
 
 /* EX PHOTOS */
-.ex-photos{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
-.ex-photo-wrap{position:relative;border-radius:10px;overflow:hidden;background:var(--bg3);}
-.ex-photo-wrap img{width:100%;height:130px;object-fit:cover;display:block;}
-.ex-photo-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.75));padding:6px 8px;font-size:10px;font-weight:700;color:#fff;text-align:center;}
+.ex-photos{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.ex-photo-wrap{position:relative;border-radius:12px;overflow:hidden;background:var(--bg3);border:1px solid var(--border);}
+.ex-photo-wrap img{width:100%;height:140px;object-fit:cover;display:block;}
+.ex-photo-fallback{width:100%;height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,var(--bg3),var(--card));}
+.ex-photo-fallback-icon{font-size:32px;opacity:0.5;}
+.ex-photo-fallback-text{font-size:10px;color:var(--text2);text-align:center;padding:0 8px;}
+.ex-photo-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.82));padding:6px 10px;font-size:11px;font-weight:700;color:#fff;text-align:center;letter-spacing:0.3px;}
+.ex-photo-label.start{background:linear-gradient(transparent,rgba(16,185,129,0.85));}
+.ex-photo-label.end{background:linear-gradient(transparent,rgba(108,99,255,0.85));}
 
 /* TIPS */
-.tips-block{background:rgba(108,99,255,0.08);border:1px solid rgba(108,99,255,0.25);border-radius:12px;padding:12px;margin-bottom:12px;}
-.tips-title{font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;}
-.tip-item{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:5px;color:var(--text);}
+.tips-block{background:rgba(108,99,255,0.07);border:1px solid rgba(108,99,255,0.22);border-radius:12px;padding:13px;margin-bottom:12px;}
+.tips-title{font-size:10px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.tip-item{display:flex;gap:9px;font-size:12.5px;line-height:1.55;margin-bottom:7px;color:var(--text);}
 .tip-item:last-child{margin-bottom:0;}
-.tip-dot{color:var(--accent);flex-shrink:0;font-weight:700;}
+.tip-dot{color:var(--accent);flex-shrink:0;font-size:14px;margin-top:-1px;}
+
+/* EXERCISE ITEM v2 */
+.ex-item-v2{background:var(--bg2);border-radius:14px;margin-bottom:10px;border:1px solid var(--border);overflow:hidden;transition:border-color 0.2s;}
+.ex-item-v2.has-done{border-color:rgba(16,185,129,0.4);}
+.ex-item-v2.all-done{border-color:var(--green);background:rgba(16,185,129,0.04);}
+.ex-item-header{padding:13px 14px;cursor:pointer;}
+.ex-item-progress{height:3px;background:var(--bg3);}
+.ex-item-progress-bar{height:100%;background:linear-gradient(90deg,var(--green),#34d399);transition:width 0.4s;}
+.ex-set-row{display:grid;grid-template-columns:28px 1fr 1fr 44px;gap:6px;align-items:center;padding:0 14px 10px;}
+.ex-set-num{width:24px;height:24px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text2);font-weight:600;flex-shrink:0;}
+.ex-set-num.done{background:var(--green);color:#fff;}
+.ex-set-input{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:10px 6px;color:var(--text);font-size:16px;font-weight:700;text-align:center;width:100%;outline:none;-webkit-appearance:none;}
+.ex-set-input:focus{border-color:var(--accent);}
+.ex-done-btn{width:40px;height:40px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;flex-shrink:0;}
+.ex-done-btn.done{background:var(--green);border-color:var(--green);}
+.ex-kcal-row{text-align:right;font-size:10px;color:var(--red);padding:0 14px;margin-top:-6px;margin-bottom:6px;}
+.ex-expanded-body{padding:0 14px 14px;border-top:1px solid var(--border);}
+.set-mini{flex:1;background:var(--bg3);border-radius:8px;padding:7px 4px;text-align:center;border:1.5px solid var(--border);min-width:0;}
+.set-mini.done{background:rgba(16,185,129,0.15);border-color:var(--green);}
+.set-mini-num{font-size:9px;color:var(--text2);}
+.set-mini-w{font-size:13px;font-weight:700;}
+.set-mini-r{font-size:11px;color:var(--text2);}
+.set-mini-kcal{font-size:9px;color:var(--red);margin-top:1px;}
 
 /* ACHIEVEMENTS */
 .ach-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -777,6 +805,20 @@ function TrainTab({workouts,setActiveWorkout}){
   );
 }
 
+// ── EXERCISE PHOTO ───────────────────────────────────────────────────────────
+function ExercisePhoto({src,labelText,labelClass,fallbackIcon,fallbackText}){
+  const [err,setErr]=useState(false);
+  return React.createElement('div',{className:'ex-photo-wrap'},
+    err||!src
+      ?React.createElement('div',{className:'ex-photo-fallback'},
+        React.createElement('div',{className:'ex-photo-fallback-icon'},fallbackIcon||'🏋️'),
+        React.createElement('div',{className:'ex-photo-fallback-text'},fallbackText||'Зображення\nнедоступне')
+      )
+      :React.createElement('img',{src,alt:labelText,onError:()=>setErr(true)}),
+    React.createElement('div',{className:`ex-photo-label ${labelClass||''}`},labelText)
+  );
+}
+
 // ── WARMUP CONFIG ─────────────────────────────────────────────────────────────
 function WarmupConfig({bodyWeight,onDone}){
   const [type,setType]=useState('treadmill'); // 'treadmill' | 'elliptical'
@@ -936,78 +978,101 @@ function WorkoutScreen({workout,onSave,onBack,workouts=[],weights=[]}){
           const isExpanded=expandedEx===ex.id;
           const meta=EXERCISE_META[ex.id];
           const rec=getRecommendedWeight(ex.id,workouts);
+          const doneCount=exSets.filter(s=>s.done).length;
           const totalExCal=exSets.filter(s=>s.done).reduce((a,s)=>a+calPerSet(ex.id,s.reps,bodyWeight),0);
-          return React.createElement('div',{key:ex.id,className:'exercise-item'},
-            React.createElement('div',{style:{cursor:'pointer'},onClick:()=>setExpandedEx(isExpanded?null:ex.id)},
-              React.createElement('div',{className:'flex-between'},
-                React.createElement('div',null,
-                  React.createElement('div',{className:'ex-tag'},ex.tag),
-                  React.createElement('div',{className:'ex-name'},ex.name)
+          const allDone=doneCount===exSets.length&&exSets.length>0;
+          const hasDone=doneCount>0;
+          const progress=exSets.length>0?doneCount/exSets.length:0;
+          return React.createElement('div',{key:ex.id,className:`ex-item-v2${allDone?' all-done':hasDone?' has-done':''}`},
+            // ── collapsed header ──
+            React.createElement('div',{className:'ex-item-header',onClick:()=>setExpandedEx(isExpanded?null:ex.id)},
+              React.createElement('div',{className:'flex-between',style:{marginBottom:6}},
+                React.createElement('div',{style:{flex:1,minWidth:0}},
+                  React.createElement('div',{style:{display:'flex',alignItems:'center',gap:6,marginBottom:3}},
+                    React.createElement('span',{className:'ex-tag'},ex.tag),
+                    allDone&&React.createElement('span',{style:{fontSize:10,color:'var(--green)',fontWeight:700}},'✓ Готово')
+                  ),
+                  React.createElement('div',{className:'ex-name',style:{fontSize:15}},ex.name)
                 ),
-                React.createElement('div',{style:{display:'flex',alignItems:'center',gap:6}},
-                  totalExCal>0&&React.createElement('span',{style:{fontSize:11,color:'var(--red)'}},`🔥${totalExCal.toFixed(0)}`),
-                  React.createElement('div',{style:{fontSize:18,color:'var(--accent)'}},isExpanded?'▲':'▼')
+                React.createElement('div',{style:{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:3,flexShrink:0,marginLeft:8}},
+                  React.createElement('div',{style:{fontSize:11,color:'var(--accent)',fontWeight:600}},isExpanded?'▲':'▼'),
+                  hasDone&&React.createElement('div',{style:{fontSize:10,color:'var(--red)',fontWeight:600}},`🔥${totalExCal.toFixed(0)}к`)
                 )
               ),
-              rec&&React.createElement('div',{style:{marginTop:4,fontSize:11,color:rec.color,fontWeight:600}},`💡 ${rec.hint}`),
-              React.createElement('div',{style:{display:'flex',gap:6,marginTop:6}},
-                exSets.map((s,si)=>React.createElement('div',{key:si,
-                  style:{flex:1,background:s.done?'rgba(16,185,129,0.2)':'var(--bg3)',borderRadius:8,padding:'6px 4px',textAlign:'center',border:`1px solid ${s.done?'var(--green)':'var(--border)'}`}},
-                  React.createElement('div',{style:{fontSize:10,color:'var(--text2)'}},`${si+1}`),
-                  React.createElement('div',{style:{fontSize:13,fontWeight:600}},ex.unit?`${s.weight}кг`:'-'),
-                  React.createElement('div',{style:{fontSize:11,color:'var(--text2)'}},`×${s.reps}`),
-                  s.done&&React.createElement('div',{style:{fontSize:9,color:'var(--red)',marginTop:1}},`🔥${calPerSet(ex.id,s.reps,bodyWeight).toFixed(0)}`)
+              rec&&React.createElement('div',{style:{marginBottom:6,fontSize:11,color:rec.color,fontWeight:700,display:'flex',alignItems:'center',gap:4}},
+                React.createElement('span',null,'💡'),React.createElement('span',null,rec.hint)
+              ),
+              // mini set badges
+              React.createElement('div',{style:{display:'flex',gap:5}},
+                exSets.map((s,si)=>React.createElement('div',{key:si,className:`set-mini${s.done?' done':''}`},
+                  React.createElement('div',{className:'set-mini-num'},`Підхід ${si+1}`),
+                  React.createElement('div',{className:'set-mini-w'},ex.unit?`${s.weight}кг`:'—'),
+                  React.createElement('div',{className:'set-mini-r'},`×${s.reps}`),
+                  s.done&&React.createElement('div',{className:'set-mini-kcal'},`🔥${calPerSet(ex.id,s.reps,bodyWeight).toFixed(0)}`)
                 ))
               )
             ),
-            isExpanded&&React.createElement('div',{style:{marginTop:12}},
-              meta?.img&&React.createElement('div',{className:'ex-photos'},
-                React.createElement('div',{className:'ex-photo-wrap'},
-                  React.createElement('img',{src:meta.img,alt:`${ex.name} — початок`,onError:e=>{e.target.parentElement.style.display='none';}}),
-                  React.createElement('div',{className:'ex-photo-label'},'▶ Початок')
-                ),
-                meta.img1&&React.createElement('div',{className:'ex-photo-wrap'},
-                  React.createElement('img',{src:meta.img1,alt:`${ex.name} — кінець`,onError:e=>{e.target.parentElement.style.display='none';}}),
-                  React.createElement('div',{className:'ex-photo-label'},'■ Кінець')
-                )
+            // progress bar
+            React.createElement('div',{className:'ex-item-progress'},
+              React.createElement('div',{className:'ex-item-progress-bar',style:{width:`${progress*100}%`}})
+            ),
+            // ── expanded body ──
+            isExpanded&&React.createElement('div',{className:'ex-expanded-body',style:{paddingTop:14}},
+              // DUAL PHOTOS — always visible, fallback if image fails
+              React.createElement('div',{className:'ex-photos'},
+                React.createElement(ExercisePhoto,{src:meta?.img,labelText:'▶ Початкове положення',labelClass:'start',fallbackIcon:'🏋️',fallbackText:'Вихідна позиція'}),
+                React.createElement(ExercisePhoto,{src:meta?.img1,labelText:'■ Кінцеве положення',labelClass:'end',fallbackIcon:'💪',fallbackText:'Кінцева позиція'})
               ),
-              React.createElement('div',{className:'ex-hint'},ex.hint),
+              // TIPS
               EXERCISE_TIPS[ex.id]&&React.createElement('div',{className:'tips-block'},
-                React.createElement('div',{className:'tips-title'},'💡 Техніка виконання'),
+                React.createElement('div',{className:'tips-title'},
+                  React.createElement('span',null,'💡'),React.createElement('span',null,'Техніка виконання')
+                ),
                 EXERCISE_TIPS[ex.id].map((tip,ti)=>React.createElement('div',{key:ti,className:'tip-item'},
                   React.createElement('span',{className:'tip-dot'},'▸'),
                   React.createElement('span',null,tip)
                 ))
               ),
+              // MUSCLE DIAGRAM
               React.createElement(MuscleDiagram,{muscles:ex.muscles}),
-              rec&&React.createElement('div',{style:{background:`${rec.color}22`,border:`1px solid ${rec.color}55`,borderRadius:10,padding:'8px 12px',marginBottom:10,fontSize:12,color:rec.color,fontWeight:600}},
-                `💡 Рекомендована вага: ${rec.weight} кг — ${rec.hint}`
+              // RECOMMENDED WEIGHT
+              rec&&React.createElement('div',{style:{background:`${rec.color}18`,border:`1px solid ${rec.color}44`,borderRadius:12,padding:'10px 14px',marginBottom:14,display:'flex',alignItems:'center',gap:10}},
+                React.createElement('div',{style:{fontSize:22}},rec.color.includes('green')?'📈':rec.color.includes('orange')?'➡️':'📉'),
+                React.createElement('div',null,
+                  React.createElement('div',{style:{fontSize:12,fontWeight:700,color:rec.color}},`Рекомендована вага: ${rec.weight} кг`),
+                  React.createElement('div',{style:{fontSize:11,color:'var(--text2)',marginTop:1}},rec.hint)
+                )
               ),
-              React.createElement('div',{className:'sets-grid',style:{marginBottom:4}},
-                React.createElement('div',{className:'col-header'},'№'),
-                React.createElement('div',{className:'col-header'},ex.unit?`Вага (${ex.unit})`:'—'),
-                React.createElement('div',{className:'col-header'},'Повтори'),
-                React.createElement('div',null)
-              ),
-              exSets.map((s,si)=>{
-                const kcal=calPerSet(ex.id,s.reps,bodyWeight);
-                return React.createElement('div',{key:si},
-                  React.createElement('div',{className:'sets-grid',style:{marginBottom:2}},
-                    React.createElement('div',{className:'set-label'},si+1),
-                    ex.unit
-                      ?React.createElement('input',{type:'number',className:'set-input',value:s.weight,onChange:e=>updateSet(ex.id,si,'weight',parseFloat(e.target.value)||0)})
-                      :React.createElement('div',{className:'set-input',style:{display:'flex',alignItems:'center',justifyContent:'center',opacity:0.4}},'—'),
-                    React.createElement('input',{type:'number',className:'set-input',value:s.reps,onChange:e=>updateSet(ex.id,si,'reps',parseInt(e.target.value)||0)}),
-                    React.createElement('button',{className:`set-done-btn${s.done?' done':''}`,onClick:()=>toggleDone(ex.id,si)},
-                      React.createElement('svg',{viewBox:'0 0 24 24',fill:'none',stroke:'#fff',strokeWidth:2.5,width:16,height:16},
-                        React.createElement('polyline',{points:'20 6 9 17 4 12'})
+              // SETS INPUT
+              React.createElement('div',{style:{marginBottom:8}},
+                React.createElement('div',{style:{display:'grid',gridTemplateColumns:'28px 1fr 1fr 44px',gap:6,marginBottom:6,padding:'0 2px'}},
+                  React.createElement('div',{className:'col-header'},'№'),
+                  React.createElement('div',{className:'col-header'},ex.unit?`Вага (${ex.unit})`:'—'),
+                  React.createElement('div',{className:'col-header'},'Повтори'),
+                  React.createElement('div',null)
+                ),
+                exSets.map((s,si)=>{
+                  const kcal=calPerSet(ex.id,s.reps,bodyWeight);
+                  return React.createElement('div',{key:si,style:{marginBottom:8}},
+                    React.createElement('div',{className:'ex-set-row',style:{padding:0}},
+                      React.createElement('div',{className:`ex-set-num${s.done?' done':''}`,style:{width:28,height:28,fontSize:11}},si+1),
+                      ex.unit
+                        ?React.createElement('input',{type:'number',className:'ex-set-input',value:s.weight,onChange:e=>updateSet(ex.id,si,'weight',parseFloat(e.target.value)||0)})
+                        :React.createElement('div',{className:'ex-set-input',style:{opacity:0.35,display:'flex',alignItems:'center',justifyContent:'center'}},'—'),
+                      React.createElement('input',{type:'number',className:'ex-set-input',value:s.reps,onChange:e=>updateSet(ex.id,si,'reps',parseInt(e.target.value)||0)}),
+                      React.createElement('button',{className:`ex-done-btn${s.done?' done':''}`,onClick:()=>toggleDone(ex.id,si)},
+                        React.createElement('svg',{viewBox:'0 0 24 24',fill:'none',stroke:'#fff',strokeWidth:3,width:16,height:16},
+                          React.createElement('polyline',{points:'20 6 9 17 4 12'})
+                        )
                       )
-                    )
-                  ),
-                  React.createElement('div',{style:{textAlign:'right',fontSize:10,color:'var(--red)',marginBottom:4}},`🔥 ~${kcal.toFixed(1)} ккал за підхід`)
-                );
-              }),
-              React.createElement('div',{className:'text-xs',style:{marginTop:8,color:'var(--orange)'}},`⏱ Відпочинок між підходами: ${block.rest} сек`)
+                    ),
+                    s.done&&React.createElement('div',{className:'ex-kcal-row',style:{padding:0,marginTop:3}},`🔥 ${kcal.toFixed(1)} ккал за цей підхід`)
+                  );
+                })
+              ),
+              React.createElement('div',{style:{padding:'8px 12px',background:'rgba(245,158,11,0.08)',borderRadius:10,fontSize:12,color:'var(--orange)',fontWeight:600}},
+                `⏱ Відпочинок після підходу: ${block.rest} сек`
+              )
             )
           );
         }),
