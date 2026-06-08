@@ -279,6 +279,27 @@ const LEVELS=[
   {level:7,name:'Легенда',minXP:3000},
 ];
 
+// ── EXERCISE META (images + calorie data) ────────────────────────────────────
+const BASE_IMG='https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/';
+const EXERCISE_META={
+  e1:{img:BASE_IMG+'Barbell_Bench_Press_-_Medium_Grip/images/0.jpg',met:6,spr:3},
+  e2:{img:BASE_IMG+'Dumbbell_One-Arm_Row/images/0.jpg',met:5.5,spr:3},
+  e3:{img:BASE_IMG+'Wide-Grip_Lat_Pulldown/images/0.jpg',met:5,spr:3},
+  e4:{img:BASE_IMG+'Dumbbell_Incline_Bench_Press/images/0.jpg',met:5.5,spr:3},
+  e5:{img:BASE_IMG+'Crunch/images/0.jpg',met:3.5,spr:2},
+  e6:{img:BASE_IMG+'Leg_Press/images/0.jpg',met:6,spr:3},
+  e7:{img:BASE_IMG+'Romanian_Deadlift/images/0.jpg',met:6,spr:4},
+  e8:{img:BASE_IMG+'Standing_Calf_Raises/images/0.jpg',met:3.5,spr:2.5},
+  e9:{img:BASE_IMG+'Dumbbell_Shoulder_Press/images/0.jpg',met:5,spr:3},
+  e10:{img:BASE_IMG+'Seated_Cable_Rows/images/0.jpg',met:5,spr:3},
+  e11:{img:BASE_IMG+'Side_Lateral_Raise/images/0.jpg',met:4,spr:2.5},
+  e12:{img:BASE_IMG+'Barbell_Curl/images/0.jpg',met:4.5,spr:2.5},
+  e13:{img:BASE_IMG+'Close-Grip_Barbell_Bench_Press/images/0.jpg',met:5.5,spr:3},
+  e14:{img:BASE_IMG+'Dumbbell_Alternate_Bicep_Curl/images/0.jpg',met:4,spr:2.5},
+  e15:{img:BASE_IMG+'Triceps_Pushdown_-_Rope_Attachment/images/0.jpg',met:4,spr:2.5},
+  e16:{img:BASE_IMG+'Lying_Leg_Hip_Raises/images/0.jpg',met:3.5,spr:2},
+};
+
 // ── STORAGE ──────────────────────────────────────────────────────────────────
 const LS={
   load:(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}},
@@ -327,6 +348,48 @@ function getWeekDates(){
   const now=new Date();const day=now.getDay();
   const mon=new Date(now);mon.setDate(now.getDate()-(day===0?6:day-1));
   return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d.toISOString().slice(0,10);});
+}
+// ── CALORIE FUNCTIONS ────────────────────────────────────────────────────────
+function calPerRep(exId,bodyWeight){
+  const m=EXERCISE_META[exId];if(!m)return 0;
+  return(m.met*bodyWeight*m.spr)/3600;
+}
+function calPerSet(exId,reps,bodyWeight){
+  return Math.round(calPerRep(exId,bodyWeight)*reps*10)/10;
+}
+function calcWorkoutCalories(workout,bodyWeight=90){
+  const day=TRAINING_DAYS[workout.dayId];if(!day)return{warmup:0,exercise:0,cardio:0,total:0};
+  const bw=bodyWeight;
+  const warmup=Math.round(4*bw*10/60);
+  let exercise=0;
+  for(const block of day.blocks){
+    for(const ex of block.exercises){
+      const sets=workout.sets?.[ex.id]||[];
+      const m=EXERCISE_META[ex.id]||{met:5,spr:3};
+      for(const s of sets){
+        if(s.done)exercise+=(m.met*bw*m.spr*s.reps)/3600;
+      }
+      exercise+=(m.met*0.25*bw*block.rest/60);
+    }
+  }
+  exercise=Math.round(exercise);
+  const cardioMet={easy:3.0,medium:3.8,hard:5.2}[workout.cardio]||3.8;
+  const cardio=Math.round(cardioMet*bw*day.cardio.duration/60);
+  return{warmup,exercise,cardio,total:warmup+exercise+cardio};
+}
+// ── RECOMMENDED WEIGHT ───────────────────────────────────────────────────────
+function getRecommendedWeight(exId,prevWorkouts){
+  const sorted=[...prevWorkouts].filter(w=>w.sets?.[exId]).sort((a,b)=>b.date.localeCompare(a.date));
+  if(!sorted.length)return null;
+  const last=sorted[0];
+  const sets=last.sets[exId]||[];
+  if(!sets.length||sets[0].weight===0)return null;
+  const w=sets[0].weight;
+  const done=sets.filter(s=>s.done).length;
+  if(done>=sets.length)return{weight:w+2.5,hint:`↑ Прогрес! ${w}→${w+2.5} кг`,color:'var(--green)'};
+  if(done>=sets.length-1)return{weight:w,hint:`= Тримай ${w} кг`,color:'var(--orange)'};
+  return{weight:Math.max(0,w-2.5),hint:`↓ Знизь до ${Math.max(0,w-2.5)} кг`,color:'var(--red)'};
+}
 }
 
 // ── MUSCLE SVG ───────────────────────────────────────────────────────────────
@@ -540,7 +603,7 @@ function App(){
     toast&&React.createElement(Toast,{msg:toast,onDone:()=>setToast(null)}),
     calDetail&&React.createElement(WorkoutDetailModal,{workout:calDetail,onClose:()=>setCalDetail(null)}),
     activeWorkout
-      ?React.createElement(WorkoutScreen,{workout:activeWorkout,onSave:saveWorkout,onBack:()=>setActiveWorkout(null)})
+      ?React.createElement(WorkoutScreen,{workout:activeWorkout,onSave:saveWorkout,onBack:()=>setActiveWorkout(null),workouts,weights})
       :React.createElement('div',null,
           tab==='home'&&React.createElement(HomeTab,{profile,level,stats,workouts,weights,setActiveWorkout,setTab}),
           tab==='train'&&React.createElement(TrainTab,{workouts,setActiveWorkout}),
@@ -669,18 +732,22 @@ function TrainTab({workouts,setActiveWorkout}){
 }
 
 // ── WORKOUT SCREEN ────────────────────────────────────────────────────────────
-function WorkoutScreen({workout,onSave,onBack}){
+function WorkoutScreen({workout,onSave,onBack,workouts=[],weights=[]}){
   const day=TRAINING_DAYS[workout.dayId];
+  const bodyWeight=weights.length>0?weights[weights.length-1].value:90;
   const [sets,setSets]=useState(()=>{
     const init={};
     day.blocks.flatMap(b=>b.exercises).forEach(ex=>{
-      init[ex.id]=workout.sets[ex.id]||Array.from({length:3},()=>({weight:ex.dw,reps:ex.dr,done:false}));
+      const rec=getRecommendedWeight(ex.id,workouts);
+      const startWeight=rec?rec.weight:ex.dw;
+      init[ex.id]=workout.sets[ex.id]||Array.from({length:3},()=>({weight:startWeight,reps:ex.dr,done:false}));
     });
     return init;
   });
   const [cardio,setCardio]=useState(workout.cardio||'medium');
   const [phase,setPhase]=useState('warmup');
   const [expandedEx,setExpandedEx]=useState(null);
+  const totalCals=useMemo(()=>calcWorkoutCalories({...workout,sets,cardio},bodyWeight),[sets,cardio,bodyWeight]);
 
   const updateSet=(exId,si,field,value)=>{
     setSets(prev=>{const s=[...prev[exId]];s[si]={...s[si],[field]:value};return{...prev,[exId]:s};});
@@ -693,7 +760,10 @@ function WorkoutScreen({workout,onSave,onBack}){
     React.createElement('div',{className:'page-header',style:{paddingTop:50}},
       React.createElement('div',{className:'flex-between',style:{marginBottom:8}},
         React.createElement('button',{onClick:onBack,style:{background:'none',border:'none',color:'var(--accent)',fontSize:15,cursor:'pointer'}},'← Назад'),
-        React.createElement('span',{className:'pill pill-accent'},'~75 хв')
+        React.createElement('div',{style:{display:'flex',gap:6}},
+          React.createElement('span',{className:'pill pill-accent'},'~75 хв'),
+          React.createElement('span',{className:'pill',style:{background:'rgba(239,68,68,0.2)',color:'var(--red)'}},`🔥 ~${totalCals.total} ккал`)
+        )
       ),
       React.createElement('h1',null,`${day.emoji} ${day.title}`),
       React.createElement('p',null,day.subtitle)
@@ -726,6 +796,9 @@ function WorkoutScreen({workout,onSave,onBack}){
         block.exercises.map(ex=>{
           const exSets=sets[ex.id]||[];
           const isExpanded=expandedEx===ex.id;
+          const meta=EXERCISE_META[ex.id];
+          const rec=getRecommendedWeight(ex.id,workouts);
+          const totalExCal=exSets.filter(s=>s.done).reduce((a,s)=>a+calPerSet(ex.id,s.reps,bodyWeight),0);
           return React.createElement('div',{key:ex.id,className:'exercise-item'},
             React.createElement('div',{style:{cursor:'pointer'},onClick:()=>setExpandedEx(isExpanded?null:ex.id)},
               React.createElement('div',{className:'flex-between'},
@@ -733,38 +806,58 @@ function WorkoutScreen({workout,onSave,onBack}){
                   React.createElement('div',{className:'ex-tag'},ex.tag),
                   React.createElement('div',{className:'ex-name'},ex.name)
                 ),
-                React.createElement('div',{style:{fontSize:18,color:'var(--accent)'}},isExpanded?'▲':'▼')
+                React.createElement('div',{style:{display:'flex',alignItems:'center',gap:6}},
+                  totalExCal>0&&React.createElement('span',{style:{fontSize:11,color:'var(--red)'}},`🔥${totalExCal.toFixed(0)}`),
+                  React.createElement('div',{style:{fontSize:18,color:'var(--accent)'}},isExpanded?'▲':'▼')
+                )
               ),
+              rec&&React.createElement('div',{style:{marginTop:4,fontSize:11,color:rec.color,fontWeight:600}},`💡 ${rec.hint}`),
               React.createElement('div',{style:{display:'flex',gap:6,marginTop:6}},
                 exSets.map((s,si)=>React.createElement('div',{key:si,
                   style:{flex:1,background:s.done?'rgba(16,185,129,0.2)':'var(--bg3)',borderRadius:8,padding:'6px 4px',textAlign:'center',border:`1px solid ${s.done?'var(--green)':'var(--border)'}`}},
                   React.createElement('div',{style:{fontSize:10,color:'var(--text2)'}},`${si+1}`),
                   React.createElement('div',{style:{fontSize:13,fontWeight:600}},ex.unit?`${s.weight}кг`:'-'),
-                  React.createElement('div',{style:{fontSize:11,color:'var(--text2)'}},`×${s.reps}`)
+                  React.createElement('div',{style:{fontSize:11,color:'var(--text2)'}},`×${s.reps}`),
+                  s.done&&React.createElement('div',{style:{fontSize:9,color:'var(--red)',marginTop:1}},`🔥${calPerSet(ex.id,s.reps,bodyWeight).toFixed(0)}`)
                 ))
               )
             ),
             isExpanded&&React.createElement('div',{style:{marginTop:12}},
+              meta?.img&&React.createElement('img',{
+                src:meta.img,
+                alt:ex.name,
+                style:{width:'100%',borderRadius:10,marginBottom:10,maxHeight:180,objectFit:'cover',background:'var(--bg3)'},
+                onError:e=>{e.target.style.display='none';}
+              }),
               React.createElement('div',{className:'ex-hint'},ex.hint),
               React.createElement(MuscleDiagram,{muscles:ex.muscles}),
+              rec&&React.createElement('div',{style:{background:`${rec.color}22`,border:`1px solid ${rec.color}55`,borderRadius:10,padding:'8px 12px',marginBottom:10,fontSize:12,color:rec.color,fontWeight:600}},
+                `💡 Рекомендована вага: ${rec.weight} кг — ${rec.hint}`
+              ),
               React.createElement('div',{className:'sets-grid',style:{marginBottom:4}},
                 React.createElement('div',{className:'col-header'},'№'),
                 React.createElement('div',{className:'col-header'},ex.unit?`Вага (${ex.unit})`:'—'),
                 React.createElement('div',{className:'col-header'},'Повтори'),
                 React.createElement('div',null)
               ),
-              exSets.map((s,si)=>React.createElement('div',{key:si,className:'sets-grid',style:{marginBottom:6}},
-                React.createElement('div',{className:'set-label'},si+1),
-                ex.unit
-                  ?React.createElement('input',{type:'number',className:'set-input',value:s.weight,onChange:e=>updateSet(ex.id,si,'weight',parseFloat(e.target.value)||0)})
-                  :React.createElement('div',{className:'set-input',style:{display:'flex',alignItems:'center',justifyContent:'center',opacity:0.4}},'—'),
-                React.createElement('input',{type:'number',className:'set-input',value:s.reps,onChange:e=>updateSet(ex.id,si,'reps',parseInt(e.target.value)||0)}),
-                React.createElement('button',{className:`set-done-btn${s.done?' done':''}`,onClick:()=>toggleDone(ex.id,si)},
-                  React.createElement('svg',{viewBox:'0 0 24 24',fill:'none',stroke:'#fff',strokeWidth:2.5,width:16,height:16},
-                    React.createElement('polyline',{points:'20 6 9 17 4 12'})
-                  )
-                )
-              )),
+              exSets.map((s,si)=>{
+                const kcal=calPerSet(ex.id,s.reps,bodyWeight);
+                return React.createElement('div',{key:si},
+                  React.createElement('div',{className:'sets-grid',style:{marginBottom:2}},
+                    React.createElement('div',{className:'set-label'},si+1),
+                    ex.unit
+                      ?React.createElement('input',{type:'number',className:'set-input',value:s.weight,onChange:e=>updateSet(ex.id,si,'weight',parseFloat(e.target.value)||0)})
+                      :React.createElement('div',{className:'set-input',style:{display:'flex',alignItems:'center',justifyContent:'center',opacity:0.4}},'—'),
+                    React.createElement('input',{type:'number',className:'set-input',value:s.reps,onChange:e=>updateSet(ex.id,si,'reps',parseInt(e.target.value)||0)}),
+                    React.createElement('button',{className:`set-done-btn${s.done?' done':''}`,onClick:()=>toggleDone(ex.id,si)},
+                      React.createElement('svg',{viewBox:'0 0 24 24',fill:'none',stroke:'#fff',strokeWidth:2.5,width:16,height:16},
+                        React.createElement('polyline',{points:'20 6 9 17 4 12'})
+                      )
+                    )
+                  ),
+                  React.createElement('div',{style:{textAlign:'right',fontSize:10,color:'var(--red)',marginBottom:4}},`🔥 ~${kcal.toFixed(1)} ккал за підхід`)
+                );
+              }),
               React.createElement('div',{className:'text-xs',style:{marginTop:8,color:'var(--orange)'}},`⏱ Відпочинок між підходами: ${block.rest} сек`)
             )
           );
@@ -786,10 +879,18 @@ function WorkoutScreen({workout,onSave,onBack}){
             React.createElement('div',{style:{fontSize:9,color:'var(--text2)',marginTop:2}},`+${o.xp} XP`)
           ))
         ),
-        React.createElement('div',{style:{marginTop:12,padding:12,background:'rgba(59,130,246,0.1)',borderRadius:12,fontSize:13,color:'var(--text2)'}},
+        React.createElement('div',{style:{marginTop:12,background:'rgba(239,68,68,0.08)',border:'1px solid rgba(239,68,68,0.3)',borderRadius:12,padding:14}},
+          React.createElement('div',{style:{fontWeight:700,fontSize:15,marginBottom:10,color:'var(--red)'}},`🔥 Всього за тренування: ~${totalCals.total} ккал`),
+          React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8,textAlign:'center'}},
+            React.createElement('div',null,React.createElement('div',{style:{fontSize:16,fontWeight:700,color:'var(--orange)'}},totalCals.warmup),React.createElement('div',{className:'text-xs'},'Розминка')),
+            React.createElement('div',null,React.createElement('div',{style:{fontSize:16,fontWeight:700,color:'var(--accent)'}},totalCals.exercise),React.createElement('div',{className:'text-xs'},'Вправи')),
+            React.createElement('div',null,React.createElement('div',{style:{fontSize:16,fontWeight:700,color:'var(--green)'}},totalCals.cardio),React.createElement('div',{className:'text-xs'},'Кардіо'))
+          )
+        ),
+        React.createElement('div',{style:{marginTop:10,padding:12,background:'rgba(59,130,246,0.1)',borderRadius:12,fontSize:13,color:'var(--text2)'}},
           '💊 Після кардіо: 5 г креатину + вода!'
         ),
-        React.createElement('button',{className:'btn-primary',style:{marginTop:16},onClick:()=>onSave({...workout,sets,cardio})},'🎉 Завершити та зберегти')
+        React.createElement('button',{className:'btn-primary',style:{marginTop:16},onClick:()=>onSave({...workout,sets,cardio,calories:totalCals.total})},'🎉 Завершити та зберегти')
       )
     )
   );
@@ -879,8 +980,8 @@ function CalendarTab({workouts,onSelect}){
           ),
           React.createElement('div',{style:{display:'flex',alignItems:'center',gap:8}},
             React.createElement('div',{className:'history-stats'},
-              React.createElement('div',null,`${w.volume||0} кг об.`),
-              React.createElement('div',{style:{color:'var(--text2)',fontSize:10}},w.cardio||'')
+              React.createElement('div',null,`${w.volume||0} кг`),
+              w.calories&&React.createElement('div',{style:{color:'var(--red)',fontSize:10}},`🔥 ${w.calories} ккал`)
             ),
             React.createElement('div',{className:`score-badge ${gr.cls}`,style:{width:40,height:40,fontSize:16}},gr.g)
           )
@@ -897,6 +998,7 @@ function WorkoutDetailModal({workout,onClose}){
   const score=workout.score||calcScore(workout);
   const gr=scoreGrade(score);
   const vol=workout.volume||calcVolume(workout);
+  const kcal=workout.calories||0;
   const allEx=day.blocks.flatMap(b=>b.exercises);
   const totalSets=allEx.reduce((a,ex)=>{const s=workout.sets?.[ex.id]||[];return a+s.length;},0);
   const doneSets=allEx.reduce((a,ex)=>{const s=workout.sets?.[ex.id]||[];return a+s.filter(x=>x.done).length;},0);
@@ -916,17 +1018,21 @@ function WorkoutDetailModal({workout,onClose}){
       ),
 
       // Stats row
-      React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8,marginBottom:16}},
-        React.createElement('div',{style:{background:'var(--bg2)',borderRadius:10,padding:10,textAlign:'center'}},
-          React.createElement('div',{style:{fontSize:18,fontWeight:700,color:'var(--accent)'}},`${doneSets}/${totalSets}`),
+      React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr 1fr 1fr',gap:6,marginBottom:16}},
+        React.createElement('div',{style:{background:'var(--bg2)',borderRadius:10,padding:8,textAlign:'center'}},
+          React.createElement('div',{style:{fontSize:16,fontWeight:700,color:'var(--accent)'}},`${doneSets}/${totalSets}`),
           React.createElement('div',{className:'text-xs'},'Підходів')
         ),
-        React.createElement('div',{style:{background:'var(--bg2)',borderRadius:10,padding:10,textAlign:'center'}},
-          React.createElement('div',{style:{fontSize:18,fontWeight:700,color:'var(--green)'}},vol),
+        React.createElement('div',{style:{background:'var(--bg2)',borderRadius:10,padding:8,textAlign:'center'}},
+          React.createElement('div',{style:{fontSize:16,fontWeight:700,color:'var(--green)'}},vol),
           React.createElement('div',{className:'text-xs'},'кг об\'єм')
         ),
-        React.createElement('div',{style:{background:'var(--bg2)',borderRadius:10,padding:10,textAlign:'center'}},
-          React.createElement('div',{style:{fontSize:18,fontWeight:700,color:'var(--orange)'}},
+        React.createElement('div',{style:{background:'var(--bg2)',borderRadius:10,padding:8,textAlign:'center'}},
+          React.createElement('div',{style:{fontSize:16,fontWeight:700,color:'var(--red)'}},kcal||'—'),
+          React.createElement('div',{className:'text-xs'},'🔥 ккал')
+        ),
+        React.createElement('div',{style:{background:'var(--bg2)',borderRadius:10,padding:8,textAlign:'center'}},
+          React.createElement('div',{style:{fontSize:16,fontWeight:700,color:'var(--orange)'}},
             CARDIO_OPTIONS.find(c=>c.id===workout.cardio)?.icon||'🚶'
           ),
           React.createElement('div',{className:'text-xs'},

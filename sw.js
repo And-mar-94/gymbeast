@@ -1,4 +1,4 @@
-const CACHE = 'gymbeast-v2';
+const CACHE = 'gymbeast-v3';
 const ASSETS = [
   '/gymbeast/',
   '/gymbeast/index.html',
