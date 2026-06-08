@@ -1,5 +1,12 @@
-const CACHE = 'gymbeast-v1';
-const ASSETS = ['/', '/index.html', '/manifest.json'];
+const CACHE = 'gymbeast-v2';
+const ASSETS = [
+  '/gymbeast/',
+  '/gymbeast/index.html',
+  '/gymbeast/manifest.json',
+  '/gymbeast/sw.js',
+  '/gymbeast/icon-192.png',
+  '/gymbeast/icon-512.png'
+];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));

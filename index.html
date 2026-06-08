@@ -8,173 +8,143 @@
 <meta name="theme-color" content="#0f0f1a">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>GymBeast — Мій Тренувальний Щоденник</title>
+<title>GymBeast</title>
 <style>
-  :root {
-    --bg: #0f0f1a;
-    --bg2: #1a1a2e;
-    --bg3: #16213e;
-    --card: #1e1e35;
-    --card2: #252545;
-    --accent: #6c63ff;
-    --accent2: #a855f7;
-    --green: #10b981;
-    --orange: #f59e0b;
-    --red: #ef4444;
-    --blue: #3b82f6;
-    --text: #e2e8f0;
-    --text2: #94a3b8;
-    --border: #2d2d50;
-    --gold: #fbbf24;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; overflow-x: hidden; }
-  #root { min-height: 100vh; padding-bottom: 80px; }
+:root{--bg:#0f0f1a;--bg2:#1a1a2e;--bg3:#16213e;--card:#1e1e35;--card2:#252545;--accent:#6c63ff;--accent2:#a855f7;--green:#10b981;--orange:#f59e0b;--red:#ef4444;--blue:#3b82f6;--text:#e2e8f0;--text2:#94a3b8;--border:#2d2d50;--gold:#fbbf24;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow-x:hidden;}
+#root{min-height:100vh;padding-bottom:80px;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px;cursor:pointer;border:none;background:none;color:var(--text2);font-size:10px;transition:color 0.2s;}
+.nav-btn.active{color:var(--accent);}
+.nav-btn svg{width:22px;height:22px;}
+.page-header{padding:50px 20px 20px;background:linear-gradient(135deg,var(--bg3) 0%,var(--bg2) 100%);}
+.page-header h1{font-size:24px;font-weight:700;}
+.page-header p{color:var(--text2);font-size:14px;margin-top:4px;}
+.card{background:var(--card);border-radius:16px;padding:16px;margin:0 16px 12px;border:1px solid var(--border);}
+.card-title{font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:0 16px 12px;}
+.stat-card{background:var(--card);border-radius:14px;padding:14px 10px;text-align:center;border:1px solid var(--border);}
+.stat-val{font-size:22px;font-weight:700;color:var(--accent);}
+.stat-label{font-size:10px;color:var(--text2);margin-top:2px;}
+.xp-bar-wrap{background:var(--bg2);border-radius:999px;height:8px;overflow:hidden;margin-top:8px;}
+.xp-bar{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.5s;}
+.day-card{background:var(--card2);border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid var(--border);cursor:pointer;position:relative;overflow:hidden;}
+.day-card h3{font-size:16px;font-weight:600;}
+.day-card .day-sub{font-size:12px;color:var(--text2);margin-top:4px;}
+.exercise-block{margin-bottom:16px;}
+.block-header{background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);border-radius:10px;padding:10px 14px;margin-bottom:8px;}
+.block-header h4{font-size:14px;font-weight:700;}
+.block-header p{font-size:11px;opacity:0.85;margin-top:2px;}
+.exercise-item{background:var(--bg2);border-radius:12px;padding:12px;margin-bottom:8px;border:1px solid var(--border);}
+.ex-name{font-size:14px;font-weight:600;margin-bottom:4px;}
+.ex-hint{font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.4;}
+.ex-tag{display:inline-block;background:var(--bg3);border-radius:6px;padding:2px 8px;font-size:10px;color:var(--accent);margin-bottom:8px;}
+.sets-grid{display:grid;grid-template-columns:auto 1fr 1fr 40px;gap:6px;align-items:center;}
+.set-label{font-size:12px;color:var(--text2);}
+.col-header{font-size:10px;color:var(--text2);text-align:center;}
+.set-input{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-size:15px;text-align:center;width:100%;outline:none;-webkit-appearance:none;}
+.set-input:focus{border-color:var(--accent);}
+.set-done-btn{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;}
+.set-done-btn.done{background:var(--green);border-color:var(--green);}
+.cardio-options{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.cardio-opt{border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;cursor:pointer;transition:all 0.2s;}
+.cardio-opt.selected{border-color:var(--accent);background:rgba(108,99,255,0.15);}
+.cardio-opt .c-icon{font-size:20px;margin-bottom:4px;}
+.cardio-opt .c-label{font-size:11px;color:var(--text2);}
+.cardio-opt.selected .c-label{color:var(--accent);}
+.weight-input-row{display:flex;gap:10px;align-items:center;}
+.big-input{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:20px;font-weight:700;text-align:center;outline:none;-webkit-appearance:none;}
+.big-input:focus{border-color:var(--accent);}
+.add-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:12px;padding:14px 20px;color:#fff;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;padding:16px;color:#fff;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-top:16px;}
+.btn-secondary{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;color:var(--text);font-size:15px;font-weight:600;cursor:pointer;width:100%;}
+.mini-chart{height:80px;position:relative;margin:10px 0;}
+.chart-svg{width:100%;height:100%;}
+.history-item{background:var(--card2);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);}
+.history-date{font-size:12px;color:var(--text2);}
+.history-day{font-size:14px;font-weight:600;}
+.history-stats{text-align:right;font-size:12px;color:var(--text2);}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;display:flex;align-items:flex-end;}
+.modal-sheet{background:var(--card);border-radius:24px 24px 0 0;padding:20px 20px 40px;width:100%;max-height:90vh;overflow-y:auto;}
+.modal-handle{width:40px;height:4px;background:var(--border);border-radius:999px;margin:0 auto 20px;}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:16px;}
+.level-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--gold),#f97316);border-radius:999px;padding:4px 12px;font-size:12px;font-weight:700;color:#000;}
+.week-row{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:0 16px 12px;}
+.week-day{text-align:center;}
+.week-day .wd-label{font-size:9px;color:var(--text2);margin-bottom:4px;}
+.week-day .wd-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:11px;font-weight:600;}
+.wd-dot.today{background:var(--accent);color:#fff;}
+.wd-dot.done{background:var(--green);color:#fff;}
+.wd-dot.rest{background:var(--bg3);color:var(--text2);}
+.wd-dot.past{background:var(--bg2);color:var(--text2);}
+.toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:12px 24px;border-radius:999px;font-size:14px;font-weight:600;z-index:300;animation:toast-in 0.3s ease;white-space:nowrap;}
+@keyframes toast-in{from{opacity:0;transform:translateX(-50%) translateY(-10px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;}
+.pill-green{background:rgba(16,185,129,0.2);color:var(--green);}
+.pill-orange{background:rgba(245,158,11,0.2);color:var(--orange);}
+.pill-accent{background:rgba(108,99,255,0.2);color:var(--accent);}
+.pill-red{background:rgba(239,68,68,0.2);color:var(--red);}
+.tab-row{display:flex;gap:8px;padding:0 16px 12px;overflow-x:auto;scrollbar-width:none;}
+.tab-row::-webkit-scrollbar{display:none;}
+.tab-btn{border:1px solid var(--border);border-radius:999px;padding:7px 16px;font-size:13px;white-space:nowrap;cursor:pointer;background:var(--card);color:var(--text2);}
+.tab-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
+.flex-between{display:flex;justify-content:space-between;align-items:center;}
+.text-xs{font-size:11px;color:var(--text2);}
+.text-sm{font-size:13px;}
+.text-green{color:var(--green);}
+.text-accent{color:var(--accent);}
+.fw-700{font-weight:700;}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+input[type=number]{-moz-appearance:textfield;}
 
-  /* NAV */
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--border); display: flex; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
-  .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 4px; cursor: pointer; border: none; background: none; color: var(--text2); font-size: 10px; transition: color 0.2s; }
-  .nav-btn.active { color: var(--accent); }
-  .nav-btn svg { width: 22px; height: 22px; }
+/* CALENDAR */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;padding:0 16px;}
+.cal-hdr{font-size:10px;color:var(--text2);text-align:center;padding:4px 0;}
+.cal-day{aspect-ratio:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;font-size:12px;background:var(--bg2);}
+.cal-day.empty{background:transparent;cursor:default;}
+.cal-day.today{background:var(--accent);color:#fff;font-weight:700;}
+.cal-day.has-workout{background:rgba(16,185,129,0.25);border:1px solid rgba(16,185,129,0.5);color:var(--green);font-weight:600;}
+.cal-day.other-month{opacity:0.3;}
+.cal-day .cal-dot{width:4px;height:4px;border-radius:50%;background:var(--green);position:absolute;bottom:3px;}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;padding:0 16px 12px;}
+.cal-nav button{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:8px 16px;cursor:pointer;font-size:16px;}
+.cal-nav span{font-size:16px;font-weight:700;}
 
-  /* HEADER */
-  .page-header { padding: 50px 20px 20px; background: linear-gradient(135deg, var(--bg3) 0%, var(--bg2) 100%); }
-  .page-header h1 { font-size: 24px; font-weight: 700; }
-  .page-header p { color: var(--text2); font-size: 14px; margin-top: 4px; }
+/* SCORE BADGE */
+.score-badge{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;font-weight:700;flex-shrink:0;}
+.score-s{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#000;}
+.score-a{background:linear-gradient(135deg,#6c63ff,#a855f7);color:#fff;}
+.score-b{background:linear-gradient(135deg,#3b82f6,#06b6d4);color:#fff;}
+.score-c{background:linear-gradient(135deg,#94a3b8,#64748b);color:#fff;}
 
-  /* CARDS */
-  .card { background: var(--card); border-radius: 16px; padding: 16px; margin: 0 16px 12px; border: 1px solid var(--border); }
-  .card-title { font-size: 12px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+/* MUSCLE DIAGRAM */
+.muscle-wrap{display:flex;gap:8px;justify-content:center;margin:10px 0;}
+.muscle-svg-box{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.muscle-svg-label{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;}
+.muscle-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+.muscle-tag-primary{background:rgba(108,99,255,0.25);color:var(--accent);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:600;}
+.muscle-tag-secondary{background:rgba(148,163,184,0.15);color:var(--text2);border-radius:6px;padding:2px 8px;font-size:10px;}
 
-  /* STATS ROW */
-  .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 0 16px 12px; }
-  .stat-card { background: var(--card); border-radius: 14px; padding: 14px 10px; text-align: center; border: 1px solid var(--border); }
-  .stat-val { font-size: 22px; font-weight: 700; color: var(--accent); }
-  .stat-label { font-size: 10px; color: var(--text2); margin-top: 2px; }
+/* WORKOUT DETAIL */
+.wk-detail-set{display:flex;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);}
+.wk-detail-set:last-child{border:none;}
+.set-num{width:22px;height:22px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text2);flex-shrink:0;}
+.set-num.done{background:var(--green);color:#fff;}
 
-  /* LEVEL BAR */
-  .xp-bar-wrap { background: var(--bg2); border-radius: 999px; height: 8px; overflow: hidden; margin-top: 8px; }
-  .xp-bar { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 0.5s; }
+/* QUOTE CARD */
+.quote-card{background:linear-gradient(135deg,rgba(108,99,255,0.15),rgba(168,85,247,0.15));border:1px solid rgba(108,99,255,0.3);border-radius:16px;padding:16px;margin:0 16px 12px;}
+.quote-text{font-size:14px;font-style:italic;line-height:1.6;color:var(--text);}
+.quote-author{font-size:11px;color:var(--accent);margin-top:8px;font-weight:600;}
 
-  /* WORKOUT DAY CARD */
-  .day-card { background: var(--card2); border-radius: 14px; padding: 14px; margin-bottom: 10px; border: 1px solid var(--border); cursor: pointer; position: relative; overflow: hidden; }
-  .day-card.active-day { border-color: var(--accent); }
-  .day-card .day-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text2); margin-bottom: 6px; }
-  .day-card h3 { font-size: 16px; font-weight: 600; }
-  .day-card .day-sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
-  .day-card.done-day { opacity: 0.7; }
-  .done-badge { position: absolute; top: 14px; right: 14px; background: var(--green); color: #fff; font-size: 10px; padding: 3px 8px; border-radius: 999px; font-weight: 600; }
-  .rest-day-card { background: var(--bg3); border-radius: 14px; padding: 14px; margin-bottom: 10px; border: 1px dashed var(--border); opacity: 0.6; text-align: center; color: var(--text2); font-size: 14px; }
-
-  /* EXERCISES */
-  .exercise-block { margin-bottom: 16px; }
-  .block-header { background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%); border-radius: 10px; padding: 10px 14px; margin-bottom: 8px; }
-  .block-header h4 { font-size: 14px; font-weight: 700; }
-  .block-header p { font-size: 11px; opacity: 0.85; margin-top: 2px; }
-  .exercise-item { background: var(--bg2); border-radius: 12px; padding: 12px; margin-bottom: 8px; border: 1px solid var(--border); }
-  .ex-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-  .ex-hint { font-size: 11px; color: var(--text2); margin-bottom: 10px; line-height: 1.4; }
-  .ex-tag { display: inline-block; background: var(--bg3); border-radius: 6px; padding: 2px 8px; font-size: 10px; color: var(--accent); margin-bottom: 8px; }
-
-  /* SETS TABLE */
-  .sets-grid { display: grid; grid-template-columns: auto 1fr 1fr 40px; gap: 6px; align-items: center; }
-  .sets-grid .set-label { font-size: 12px; color: var(--text2); }
-  .sets-grid .col-header { font-size: 10px; color: var(--text2); text-align: center; }
-  .set-input { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 8px; color: var(--text); font-size: 15px; text-align: center; width: 100%; outline: none; -webkit-appearance: none; }
-  .set-input:focus { border-color: var(--accent); }
-  .set-done-btn { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg3); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
-  .set-done-btn.done { background: var(--green); border-color: var(--green); }
-
-  /* CARDIO */
-  .cardio-section { background: var(--bg3); border-radius: 12px; padding: 14px; margin: 10px 0; }
-  .cardio-title { font-size: 13px; font-weight: 600; margin-bottom: 10px; }
-  .cardio-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-  .cardio-opt { border: 1px solid var(--border); border-radius: 10px; padding: 10px 6px; text-align: center; cursor: pointer; transition: all 0.2s; }
-  .cardio-opt.selected { border-color: var(--accent); background: rgba(108,99,255,0.15); }
-  .cardio-opt .c-icon { font-size: 20px; margin-bottom: 4px; }
-  .cardio-opt .c-label { font-size: 11px; color: var(--text2); }
-  .cardio-opt.selected .c-label { color: var(--accent); }
-
-  /* WEIGHT TRACKER */
-  .weight-input-row { display: flex; gap: 10px; align-items: center; }
-  .big-input { flex: 1; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; color: var(--text); font-size: 20px; font-weight: 700; text-align: center; outline: none; -webkit-appearance: none; }
-  .big-input:focus { border-color: var(--accent); }
-  .add-btn { background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none; border-radius: 12px; padding: 14px 20px; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; white-space: nowrap; }
-  .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none; border-radius: 14px; padding: 16px; color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 16px; }
-  .btn-secondary { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 14px; color: var(--text); font-size: 15px; font-weight: 600; cursor: pointer; width: 100%; }
-
-  /* CHART */
-  .mini-chart { height: 80px; position: relative; margin: 10px 0; }
-  .chart-svg { width: 100%; height: 100%; }
-
-  /* HISTORY */
-  .history-item { background: var(--card2); border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
-  .history-date { font-size: 12px; color: var(--text2); }
-  .history-day { font-size: 14px; font-weight: 600; }
-  .history-stats { text-align: right; font-size: 12px; color: var(--text2); }
-
-  /* ACHIEVEMENTS */
-  .achievements-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .achievement { background: var(--card2); border-radius: 14px; padding: 14px; text-align: center; border: 1px solid var(--border); }
-  .achievement.unlocked { border-color: var(--gold); background: rgba(251,191,36,0.08); }
-  .achievement .ach-icon { font-size: 32px; margin-bottom: 8px; }
-  .achievement .ach-name { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
-  .achievement .ach-desc { font-size: 10px; color: var(--text2); }
-  .achievement:not(.unlocked) { opacity: 0.5; filter: grayscale(0.8); }
-
-  /* MODAL */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; display: flex; align-items: flex-end; }
-  .modal-sheet { background: var(--card); border-radius: 24px 24px 0 0; padding: 20px 20px 40px; width: 100%; max-height: 90vh; overflow-y: auto; }
-  .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 999px; margin: 0 auto 20px; }
-  .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
-
-  /* STREAK */
-  .streak-display { display: flex; align-items: center; gap: 10px; }
-  .streak-fire { font-size: 36px; }
-  .streak-num { font-size: 42px; font-weight: 700; line-height: 1; }
-  .streak-label { font-size: 14px; color: var(--text2); }
-
-  /* TOAST */
-  .toast { position: fixed; top: 60px; left: 50%; transform: translateX(-50%); background: var(--green); color: #fff; padding: 12px 24px; border-radius: 999px; font-size: 14px; font-weight: 600; z-index: 300; animation: toast-in 0.3s ease; white-space: nowrap; }
-  @keyframes toast-in { from { opacity: 0; transform: translateX(-50%) translateY(-10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
-
-  /* LEVEL BADGE */
-  .level-badge { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, var(--gold), #f97316); border-radius: 999px; padding: 4px 12px; font-size: 12px; font-weight: 700; color: #000; }
-
-  /* WEEK CALENDAR */
-  .week-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; padding: 0 16px 12px; }
-  .week-day { text-align: center; }
-  .week-day .wd-label { font-size: 9px; color: var(--text2); margin-bottom: 4px; }
-  .week-day .wd-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 11px; font-weight: 600; }
-  .wd-dot.today { background: var(--accent); color: #fff; }
-  .wd-dot.done { background: var(--green); color: #fff; }
-  .wd-dot.rest { background: var(--bg3); color: var(--text2); }
-  .wd-dot.training { background: var(--bg2); color: var(--text); border: 1px dashed var(--accent); }
-  .wd-dot.past { background: var(--bg2); color: var(--text2); }
-
-  .section-pad { padding: 0 16px; }
-  .mt-8 { margin-top: 8px; }
-  .mt-12 { margin-top: 12px; }
-  .text-green { color: var(--green); }
-  .text-orange { color: var(--orange); }
-  .text-accent { color: var(--accent); }
-  .text-sm { font-size: 13px; }
-  .text-xs { font-size: 11px; color: var(--text2); }
-  .fw-600 { font-weight: 600; }
-  .flex-between { display: flex; justify-content: space-between; align-items: center; }
-  .pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; }
-  .pill-green { background: rgba(16,185,129,0.2); color: var(--green); }
-  .pill-orange { background: rgba(245,158,11,0.2); color: var(--orange); }
-  .pill-accent { background: rgba(108,99,255,0.2); color: var(--accent); }
-
-  .tab-row { display: flex; gap: 8px; padding: 0 16px 12px; overflow-x: auto; scrollbar-width: none; }
-  .tab-row::-webkit-scrollbar { display: none; }
-  .tab-btn { border: 1px solid var(--border); border-radius: 999px; padding: 7px 16px; font-size: 13px; white-space: nowrap; cursor: pointer; background: var(--card); color: var(--text2); }
-  .tab-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
-
-  input[type=number]::-webkit-outer-spin-button,
-  input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-  input[type=number] { -moz-appearance: textfield; }
+/* ACHIEVEMENTS */
+.ach-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.ach-item{background:var(--card2);border-radius:14px;padding:14px;text-align:center;border:1px solid var(--border);}
+.ach-item.unlocked{border-color:var(--gold);background:rgba(251,191,36,0.08);}
+.ach-item:not(.unlocked){opacity:0.45;filter:grayscale(0.8);}
+.ach-icon{font-size:30px;margin-bottom:6px;}
+.ach-name{font-size:12px;font-weight:600;margin-bottom:3px;}
+.ach-desc{font-size:10px;color:var(--text2);}
 </style>
 </head>
 <body>
@@ -182,819 +152,961 @@
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script>
-const { useState, useEffect, useCallback, useRef, useMemo } = React;
+const {useState,useEffect,useCallback,useMemo,useRef} = React;
 
-// ─── DATA ─────────────────────────────────────────────────────────────────────
+// ── QUOTES ──────────────────────────────────────────────────────────────────
+const QUOTES = [
+  {text:"Біль тимчасовий. Відмова залишається назавжди.",author:"Lance Armstrong"},
+  {text:"Якщо ти не зупиняєшся коли втомлений — зупиняйся коли зробив.",author:"David Goggins"},
+  {text:"Я робив те, що інші вважали неможливим.",author:"Arnold Schwarzenegger"},
+  {text:"Не рахуй дні — роби так, щоб дні рахувались.",author:"Muhammad Ali"},
+  {text:"Тіло досягає того, що розум вірить.",author:"Napoleon Hill"},
+  {text:"Одного дня або день перший. Ти вибираєш.",author:"Невідомо"},
+  {text:"Немає ліфта до успіху. Треба йти сходами.",author:"Zig Ziglar"},
+  {text:"Кожне тренування, яке ти не пропустив — це день, коли ти переміг себе.",author:"Ronnie Coleman"},
+  {text:"Успіх — це сума маленьких зусиль, повторюваних день за днем.",author:"Robert Collier"},
+  {text:"Я не змагаюсь з іншими. Я змагаюсь з тим, ким я був учора.",author:"Kobe Bryant"},
+  {text:"Ніхто не запам'ятає твоє тіло. Всі запам'ятають твій характер. Але твоє тіло — це твій характер.",author:"Greg Plitt"},
+  {text:"Якщо не виклик — немає змін. Якщо немає змін — немає росту.",author:"Les Brown"},
+  {text:"Жоден м'яз не росте без опору. Ні в залі, ні в житті.",author:"Eric Thomas"},
+  {text:"Тренування — це не покарання за їжу. Це святкування того, що твоє тіло здатне робити.",author:"Невідомо"},
+  {text:"Коли болить — ти зростаєш. Коли не болить — ти деградуєш.",author:"Dorian Yates"},
+  {text:"Всі хочуть бути чемпіоном, але ніхто не хоче підіймати важку штангу.",author:"Ronnie Coleman"},
+  {text:"Зупинись лише тоді, коли пишаєшся. Не тоді, коли втомився.",author:"Невідомо"},
+  {text:"Перші 3 дні — найважчі. Потім стає звичкою. Потім стає частиною тебе.",author:"Mike Tyson"},
+];
+
+// ── TRAINING DATA ────────────────────────────────────────────────────────────
 const TRAINING_DAYS = {
-  1: {
-    name: 'День 1',
-    title: 'Груди + Спина',
-    subtitle: 'Горизонтальна площина • Товщина',
-    emoji: '💪',
-    weekdays: [1], // Monday
-    warmup: '7 хв ходьба на доріжці під нахилом 4–6% (5–5.5 км/год)\n3 хв суглобова гімнастика плечей, ліктів, кистей',
-    blocks: [
-      {
-        id: 'b1d1',
-        name: 'БЛОК №1 — Горизонтальна площина',
-        desc: 'Суперсет на м\'язи-антагоністи • 3 підходи',
-        rest: 90,
-        exercises: [
-          { id: 'e1', name: 'Жим штанги лежачи', hint: 'Горизонтальна лава. Лопатки зведені, ноги на підлозі. Рівно 10 повторень.', tag: 'Груди • Базова', defaultWeight: 45, defaultReps: 10, unit: 'кг', laterality: 'both' },
-          { id: 'e2', name: 'Тяга гантелі в нахилі (1 рука)', hint: 'Впираємось коліном у лаву. Тягнемо до пояса, не повертаючи корпус. 10 разів кожною рукою.', tag: 'Спина • Базова', defaultWeight: 15, defaultReps: 10, unit: 'кг', laterality: 'both' },
-        ]
-      },
-      {
-        id: 'b2d1',
-        name: 'БЛОК №2 — Вертикальна площина',
-        desc: 'Суперсет на м\'язи-антагоністи • 3 підходи',
-        rest: 90,
-        exercises: [
-          { id: 'e3', name: 'Тяга вертикального блока до грудей', hint: 'Широкий хват. Тягнемо лопатки вниз і назад. Не розгойдуватись.', tag: 'Спина • Ширина', defaultWeight: 37, defaultReps: 10, unit: 'кг', laterality: 'both' },
-          { id: 'e4', name: 'Жим гантелей під кутом 30°', hint: 'Нахил 30 градусів (верх грудей). Гантелі паралельно. 10 повторень.', tag: 'Верх грудей', defaultWeight: 13, defaultReps: 10, unit: 'кг', laterality: 'both' },
-        ]
-      },
-      {
-        id: 'b3d1',
-        name: 'ПРЕС',
-        desc: '3 підходи по 15–20 повторень',
-        rest: 60,
-        exercises: [
-          { id: 'e5', name: 'Скручування лежачи', hint: 'Руки за головою (не тягти!). Скручуємо грудьми до колін. Повільно вниз.', tag: 'Прес', defaultWeight: 0, defaultReps: 15, unit: '', laterality: 'both' },
-        ]
-      }
+  1:{name:'День 1',title:'Груди + Спина',subtitle:'Товщина • Горизонтальна площина',emoji:'💪',
+    warmup:'7 хв ходьба на доріжці під нахилом 4–6% (5–5.5 км/год)\n3 хв суглобова гімнастика плечей, ліктів, кистей',
+    blocks:[
+      {id:'b1d1',name:'БЛОК №1 — Горизонтальна площина',desc:'Суперсет антагоністи • 3 підходи • відпочинок 90 сек',rest:90,
+        exercises:[
+          {id:'e1',name:'Жим штанги лежачи',hint:'Горизонтальна лава. Лопатки зведені та притиснуті до лави. Ноги на підлозі. Опускати до торкання грудей.',tag:'Груди • Базова',dw:45,dr:10,unit:'кг',muscles:{primary:['chest'],secondary:['front_delt','triceps'],view:'front'}},
+          {id:'e2',name:'Тяга гантелі в нахилі (1 рука)',hint:'Впираємось коліном і рукою в лаву. Тягнемо до пояса без повороту корпусу. 10 разів кожною рукою.',tag:'Спина • Базова',dw:15,dr:10,unit:'кг',muscles:{primary:['lats','rear_delt'],secondary:['biceps'],view:'back'}},
+        ]},
+      {id:'b2d1',name:'БЛОК №2 — Вертикальна площина',desc:'Суперсет антагоністи • 3 підходи • відпочинок 90 сек',rest:90,
+        exercises:[
+          {id:'e3',name:'Тяга вертикального блока до грудей',hint:'Широкий хват. Тягнемо лопатки вниз і назад. Спина злегка відхиляється. Не розгойдуватись.',tag:'Спина • Ширина',dw:37,dr:10,unit:'кг',muscles:{primary:['lats'],secondary:['biceps','rear_delt'],view:'back'}},
+          {id:'e4',name:'Жим гантелей під кутом 30°',hint:'Нахил лави 30°. Гантелі у верхній точці майже торкаються. Повільно вниз 3 секунди.',tag:'Верх грудей',dw:13,dr:10,unit:'кг',muscles:{primary:['upper_chest'],secondary:['front_delt','triceps'],view:'front'}},
+        ]},
+      {id:'b3d1',name:'ПРЕС',desc:'3 підходи по 15–20 повторень • відпочинок 60 сек',rest:60,
+        exercises:[
+          {id:'e5',name:'Скручування лежачи',hint:'Руки за головою — не тягти за шию! Скручуємо ГРУДЬМИ до колін. Поперек притиснутий до підлоги.',tag:'Прес',dw:0,dr:15,unit:'',muscles:{primary:['abs'],secondary:['obliques'],view:'front'}},
+        ]},
     ],
-    cardio: { duration: 25, desc: 'Спокійна ходьба на доріжці після силової' }
-  },
-  2: {
-    name: 'День 2',
-    title: 'Ноги',
-    subtitle: 'Квадрицепс + Біцепс стегна',
-    emoji: '🦵',
-    weekdays: [2], // Tuesday
-    warmup: '7 хв орбітрек (еліпс) з помірним опором\n3 хв розминка колінних та тазостегнових суглобів',
-    blocks: [
-      {
-        id: 'b1d2',
-        name: 'БЛОК №1 — Основний',
-        desc: 'Суперсет квадрицепс + задня поверхня стегна • 3 підходи',
-        rest: 90,
-        exercises: [
-          { id: 'e6', name: 'Жим ногами в платформі', hint: 'Стопи на ширині плечей. Коліна не зводити всередину! Жодних присідань зі штангою — щадимо поперек.', tag: 'Квадрицепс • Базова', defaultWeight: 90, defaultReps: 10, unit: 'кг', laterality: 'both' },
-          { id: 'e7', name: 'Румунська тяга з гантелями', hint: 'ПОВІЛЬНО! Спина пряма, тягнемо гантелі вздовж ніг, відчуваємо розтягнення задньої поверхні стегна. 3-4 сек вниз.', tag: 'Задня поверхня стегна', defaultWeight: 15, defaultReps: 10, unit: 'кг', laterality: 'both' },
-        ]
-      },
-      {
-        id: 'b2d2',
-        name: 'БЛОК №2 — Гомілки',
-        desc: '3 підходи по 15–20 повторень',
-        rest: 60,
-        exercises: [
-          { id: 'e8', name: 'Підйоми на носки', hint: 'У тренажері або на сходинці. Ікри люблять повільний темп і повне розтягнення внизу.', tag: 'Гомілка', defaultWeight: 10, defaultReps: 15, unit: 'кг', laterality: 'both' },
-        ]
-      }
+    cardio:{duration:25,desc:'Спокійна ходьба на доріжці після силової'}},
+
+  2:{name:'День 2',title:'Ноги',subtitle:'Квадрицепс + Біцепс стегна',emoji:'🦵',
+    warmup:'7 хв орбітрек (еліпс) з помірним опором\n3 хв ретельна розминка колінних та тазостегнових суглобів',
+    blocks:[
+      {id:'b1d2',name:'БЛОК №1 — Основний',desc:'Суперсет • 3 підходи • відпочинок 90 сек',rest:90,
+        exercises:[
+          {id:'e6',name:'Жим ногами в платформі',hint:'Стопи на ширині плечей. Коліна не зводити всередину! Поки уникаємо присідань зі штангою — щадимо поперек.',tag:'Квадрицепс • Базова',dw:90,dr:10,unit:'кг',muscles:{primary:['quads'],secondary:['glutes'],view:'front'}},
+          {id:'e7',name:'Румунська тяга з гантелями',hint:'ПОВІЛЬНО 3-4 сек вниз. Спина пряма, гантелі ковзають вздовж ніг. Відчуваємо розтягнення задньої поверхні стегна.',tag:'Задня поверхня стегна',dw:15,dr:10,unit:'кг',muscles:{primary:['hamstrings','glutes'],secondary:['lower_back'],view:'back'}},
+        ]},
+      {id:'b2d2',name:'БЛОК №2 — Гомілки',desc:'3 підходи по 15–20 повторень • відпочинок 60 сек',rest:60,
+        exercises:[
+          {id:'e8',name:'Підйоми на носки',hint:'Повне розтягнення ікри внизу — пауза 1 сек. У тренажері або на сходинці. Ікри люблять повільний темп.',tag:'Гомілка',dw:10,dr:15,unit:'кг',muscles:{primary:['calves'],secondary:[],view:'back'}},
+        ]},
     ],
-    cardio: { duration: 25, desc: 'Ходьба на доріжці без нахилу — відновлення' }
-  },
-  3: {
-    name: 'День 3',
-    title: 'Плечі + Спина',
-    subtitle: 'Дельти + Ширина спини',
-    emoji: '🏋️',
-    weekdays: [4], // Thursday
-    warmup: '7 хв ходьба + 3 хв активний розігрів плечових суглобів (махи руками, обертання)',
-    blocks: [
-      {
-        id: 'b1d3',
-        name: 'БЛОК №1 — Дельти + Верх спини',
-        desc: 'Суперсет • 3 підходи',
-        rest: 90,
-        exercises: [
-          { id: 'e9', name: 'Жим гантелей сидячи вгору', hint: 'Вертикальна лава. Ліктями не заводимо за рівень плечей. Без читингу — тільки плечі.', tag: 'Дельти • Базова', defaultWeight: 11, defaultReps: 10, unit: 'кг', laterality: 'both' },
-          { id: 'e10', name: 'Тяга горизонтального блока до пояса', hint: 'Сидячи. Тягнемо лікті назад і до тулуба. Зводимо лопатки в кінцевій точці. Ширина спини.', tag: 'Спина • Ширина', defaultWeight: 37, defaultReps: 10, unit: 'кг', laterality: 'both' },
-        ]
-      },
-      {
-        id: 'b2d3',
-        name: 'БЛОК №2 — Ізоляція середньої дельти',
-        desc: '3 підходи по 10–12 повторень',
-        rest: 60,
-        exercises: [
-          { id: 'e11', name: 'Махи гантелей через сторони', hint: 'ДУЖЕ ЛЕГКА ВАГА! Плавний рух, без ривків. Ліктик трохи зігнутий. Великий палець трохи вниз (немов виливаємо склянку).', tag: 'Середня дельта', defaultWeight: 7, defaultReps: 12, unit: 'кг', laterality: 'both' },
-        ]
-      }
+    cardio:{duration:25,desc:'Ходьба на доріжці без нахилу — відновлення пульсу'}},
+
+  3:{name:'День 3',title:'Плечі + Спина',subtitle:'Дельти + Ширина спини',emoji:'🏋️',
+    warmup:'7 хв ходьба + 3 хв активний розігрів плечових суглобів (махи руками, обертання)',
+    blocks:[
+      {id:'b1d3',name:'БЛОК №1 — Дельти + Верх спини',desc:'Суперсет • 3 підходи • відпочинок 90 сек',rest:90,
+        exercises:[
+          {id:'e9',name:'Жим гантелей сидячи вгору',hint:'Вертикальна лава. Ліктями не заводимо за рівень плечей. Без розгойдування корпусом — тільки плечі.',tag:'Дельти • Базова',dw:11,dr:10,unit:'кг',muscles:{primary:['front_delt','mid_delt'],secondary:['triceps'],view:'front'}},
+          {id:'e10',name:'Тяга горизонтального блока до пояса',hint:'Сидячи. Тягнемо лікті назад і до тулуба. Зводимо лопатки в кінцевій точці — пауза 1 сек.',tag:'Спина • Ширина',dw:37,dr:10,unit:'кг',muscles:{primary:['lats'],secondary:['rear_delt','biceps'],view:'back'}},
+        ]},
+      {id:'b2d3',name:'БЛОК №2 — Середня дельта',desc:'3 підходи по 10–12 повторень • відпочинок 60 сек',rest:60,
+        exercises:[
+          {id:'e11',name:'Махи гантелей через сторони',hint:'ДУЖЕ ЛЕГКА ВАГА! Плавний рух без ривків. Лікоть трохи зігнутий. Великий палець трохи вниз (нахил кисті як виливаємо склянку).',tag:'Середня дельта',dw:7,dr:12,unit:'кг',muscles:{primary:['mid_delt'],secondary:[],view:'front'}},
+        ]},
     ],
-    cardio: { duration: 25, desc: 'Ходьба на доріжці під нахилом' }
-  },
-  4: {
-    name: 'День 4',
-    title: 'Руки',
-    subtitle: 'Біцепс + Трицепс',
-    emoji: '💥',
-    weekdays: [5], // Friday
-    warmup: '7 хв ходьба + 3 хв суглобова розминка ліктів та кистей',
-    blocks: [
-      {
-        id: 'b1d4',
-        name: 'БЛОК №1 — Великі пучки',
-        desc: 'Суперсет біцепс + трицепс • 3 підходи',
-        rest: 90,
-        exercises: [
-          { id: 'e12', name: 'Підйом EZ-штанги на біцепс', hint: 'Стоячи. Лікті притиснути до тулуба — вони не рухаються! Тільки передпліччя працюють. EZ-гриф щадить кисті.', tag: 'Біцепс • Базова', defaultWeight: 22, defaultReps: 10, unit: 'кг', laterality: 'both' },
-          { id: 'e13', name: 'Жим вузьким хватом на трицепс', hint: 'Лежачи. Хват на ширині плечей. Опускати гриф до нижньої грудини. Ліктями не розводити.', tag: 'Трицепс • Базова', defaultWeight: 37, defaultReps: 10, unit: 'кг', laterality: 'both' },
-        ]
-      },
-      {
-        id: 'b2d4',
-        name: 'БЛОК №2 — Ізоляція',
-        desc: 'Суперсет • 3 підходи',
-        rest: 90,
-        exercises: [
-          { id: 'e14', name: 'Почергові підйоми гантелей з супінацією', hint: 'Сидячи. При підйомі — розвертаємо кисть мізинцем вгору (супінація). Пік скорочення — тримати 1 сек.', tag: 'Біцепс • Ізоляція', defaultWeight: 9, defaultReps: 10, unit: 'кг', laterality: 'both' },
-          { id: 'e15', name: 'Розгинання на верхньому блоці (канат)', hint: 'Стоячи. Корпус трохи вперед. Руки розходяться назовні в кінцевій точці. Повне розгинання.', tag: 'Трицепс • Ізоляція', defaultWeight: 17, defaultReps: 10, unit: 'кг', laterality: 'both' },
-        ]
-      },
-      {
-        id: 'b3d4',
-        name: 'ПРЕС',
-        desc: '3 підходи по 12–15 повторень',
-        rest: 60,
-        exercises: [
-          { id: 'e16', name: 'Підйом ніг (лава або шведська стінка)', hint: 'Тримаємо ноги прямими або злегка зігнутими. Попереком притиснутись до лави. Не допомагаємо інерцією.', tag: 'Прес • Низ', defaultWeight: 0, defaultReps: 12, unit: '', laterality: 'both' },
-        ]
-      }
+    cardio:{duration:25,desc:'Ходьба на доріжці під нахилом'}},
+
+  4:{name:'День 4',title:'Руки',subtitle:'Біцепс + Трицепс',emoji:'💥',
+    warmup:'7 хв ходьба + 3 хв суглобова розминка ліктів та кистей',
+    blocks:[
+      {id:'b1d4',name:'БЛОК №1 — Великі пучки',desc:'Суперсет • 3 підходи • відпочинок 90 сек',rest:90,
+        exercises:[
+          {id:'e12',name:'Підйом EZ-штанги на біцепс',hint:'Стоячи. Лікті ПРИТИСНУТИ до тулуба — вони не рухаються! Тільки передпліччя. EZ-гриф щадить кисті.',tag:'Біцепс • Базова',dw:22,dr:10,unit:'кг',muscles:{primary:['biceps'],secondary:[],view:'front'}},
+          {id:'e13',name:'Жим вузьким хватом на трицепс',hint:'Лежачи. Хват на ширині плечей. Опускати гриф до нижньої грудини. Ліктями не розводити в сторони.',tag:'Трицепс • Базова',dw:37,dr:10,unit:'кг',muscles:{primary:['triceps'],secondary:['chest'],view:'back'}},
+        ]},
+      {id:'b2d4',name:'БЛОК №2 — Ізоляція',desc:'Суперсет • 3 підходи • відпочинок 90 сек',rest:90,
+        exercises:[
+          {id:'e14',name:'Почергові підйоми гантелей з супінацією',hint:'Сидячи. При підйомі — розвертаємо кисть мізинцем вгору (супінація). Пік скорочення — тримати 1 сек.',tag:'Біцепс • Ізоляція',dw:9,dr:10,unit:'кг',muscles:{primary:['biceps'],secondary:[],view:'front'}},
+          {id:'e15',name:'Розгинання на верхньому блоці (канат)',hint:'Стоячи, корпус трохи вперед. Руки розходяться назовні в кінцевій точці. Повне розгинання — пауза.',tag:'Трицепс • Ізоляція',dw:17,dr:10,unit:'кг',muscles:{primary:['triceps'],secondary:[],view:'back'}},
+        ]},
+      {id:'b3d4',name:'ПРЕС',desc:'3 підходи по 12–15 повторень',rest:60,
+        exercises:[
+          {id:'e16',name:'Підйом ніг (лава або шведська стінка)',hint:'Ноги прямі або злегка зігнуті. Попереком притиснутись до лави. Не допомагати інерцією — повільно вниз.',tag:'Прес • Низ',dw:0,dr:12,unit:'',muscles:{primary:['abs'],secondary:[],view:'front'}},
+        ]},
     ],
-    cardio: { duration: 25, desc: 'Кардіо-ходьба після тренування' }
+    cardio:{duration:25,desc:'Кардіо-ходьба після тренування'}},
+};
+
+const CARDIO_OPTIONS=[
+  {id:'easy',icon:'🚶',label:'Легко',desc:'Спокійна ходьба',xp:15},
+  {id:'medium',icon:'🚶‍♂️',label:'Середньо',desc:'Бадьора ходьба',xp:25},
+  {id:'hard',icon:'🏃',label:'Інтенсивно',desc:'Швидка / ухил',xp:40},
+];
+
+const ACHIEVEMENTS=[
+  {id:'first',icon:'🎯',name:'Перший крок',desc:'Перше тренування',c:s=>s.total>=1},
+  {id:'week4',icon:'⚔️',name:'Воїн тижня',desc:'4 тренування за тиждень',c:s=>s.week>=4},
+  {id:'str7',icon:'🔥',name:'Вогонь',desc:'7 днів поспіль',c:s=>s.streak>=7},
+  {id:'str14',icon:'🌟',name:'Зіркова серія',desc:'14 днів поспіль',c:s=>s.streak>=14},
+  {id:'str30',icon:'👑',name:'Легенда',desc:'30 днів поспіль',c:s=>s.streak>=30},
+  {id:'w2',icon:'📉',name:'Мінус 2 кг',desc:'Схуднути на 2 кг',c:s=>s.lost>=2},
+  {id:'w5',icon:'💎',name:'Мінус 5 кг',desc:'Схуднути на 5 кг',c:s=>s.lost>=5},
+  {id:'t10',icon:'🏅',name:'Десяток',desc:'10 тренувань',c:s=>s.total>=10},
+  {id:'t20',icon:'🥈',name:'Двадцятка',desc:'20 тренувань',c:s=>s.total>=20},
+  {id:'t50',icon:'🥇',name:'Ветеран',desc:'50 тренувань',c:s=>s.total>=50},
+  {id:'score_s',icon:'⭐',name:'Клас S',desc:'Отримати оцінку S',c:s=>s.hasS},
+];
+
+const LEVELS=[
+  {level:1,name:'Новачок',minXP:0},
+  {level:2,name:'Початківець',minXP:200},
+  {level:3,name:'Атлет',minXP:500},
+  {level:4,name:'Воїн',minXP:900},
+  {level:5,name:'Чемпіон',minXP:1400},
+  {level:6,name:'Майстер',minXP:2000},
+  {level:7,name:'Легенда',minXP:3000},
+];
+
+// ── STORAGE ──────────────────────────────────────────────────────────────────
+const LS={
+  load:(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}},
+  save:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}},
+};
+
+// ── UTILS ────────────────────────────────────────────────────────────────────
+const todayStr=()=>new Date().toISOString().slice(0,10);
+const fmtDate=iso=>{const d=new Date(iso+'T12:00:00');return d.toLocaleDateString('uk-UA',{day:'numeric',month:'short'});};
+const fmtDateFull=iso=>{const d=new Date(iso+'T12:00:00');return d.toLocaleDateString('uk-UA',{weekday:'long',day:'numeric',month:'long'});};
+function getLevel(xp){
+  let cur=LEVELS[0];
+  for(const l of LEVELS)if(xp>=l.minXP)cur=l;
+  const idx=LEVELS.indexOf(cur);
+  const nxt=LEVELS[idx+1];
+  return{...cur,next:nxt,progress:nxt?(xp-cur.minXP)/(nxt.minXP-cur.minXP):1};
+}
+function calcScore(workout){
+  const day=TRAINING_DAYS[workout.dayId];if(!day)return 0;
+  const allEx=day.blocks.flatMap(b=>b.exercises);
+  const totalSets=allEx.length*3;
+  let done=0;
+  for(const ex of allEx){
+    const sets=workout.sets?.[ex.id]||[];
+    done+=sets.filter(s=>s.done).length;
   }
+  const setsScore=(done/totalSets)*50;
+  const cardioScore={easy:15,medium:25,hard:35}[workout.cardio]||15;
+  const bonus=done>=totalSets?15:0;
+  return Math.min(100,Math.round(setsScore+cardioScore+bonus));
+}
+function scoreGrade(s){
+  if(s>=90)return{g:'S',cls:'score-s'};
+  if(s>=75)return{g:'A',cls:'score-a'};
+  if(s>=60)return{g:'B',cls:'score-b'};
+  return{g:'C',cls:'score-c'};
+}
+function calcVolume(workout){
+  let vol=0;
+  for(const sets of Object.values(workout.sets||{})){
+    for(const s of sets){if(s.done&&s.weight>0)vol+=s.weight*s.reps;}
+  }
+  return vol;
+}
+function getWeekDates(){
+  const now=new Date();const day=now.getDay();
+  const mon=new Date(now);mon.setDate(now.getDate()-(day===0?6:day-1));
+  return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d.toISOString().slice(0,10);});
+}
+
+// ── MUSCLE SVG ───────────────────────────────────────────────────────────────
+const MUSCLE_COLORS={
+  primary:'#6c63ff',
+  secondary:'rgba(108,99,255,0.45)',
+  inactive:'rgba(45,45,80,0.8)',
+  outline:'rgba(100,100,150,0.4)',
 };
 
-const WEEK_SCHEDULE = {
-  1: 1, 2: 2, 3: null, 4: 3, 5: 4, 6: null, 0: null
-};
-
-const ACHIEVEMENTS = [
-  { id: 'first_workout', icon: '🎯', name: 'Перший крок', desc: 'Завершити перше тренування', condition: (s) => s.totalWorkouts >= 1 },
-  { id: 'week_warrior', icon: '⚔️', name: 'Воїн тижня', desc: '4 тренування за тиждень', condition: (s) => s.weekWorkouts >= 4 },
-  { id: 'streak_7', icon: '🔥', name: 'Вогонь', desc: '7 днів поспіль активності', condition: (s) => s.streak >= 7 },
-  { id: 'streak_14', icon: '🌟', name: 'Зіркова серія', desc: '14 днів поспіль', condition: (s) => s.streak >= 14 },
-  { id: 'streak_30', icon: '👑', name: 'Легенда', desc: '30 днів поспіль', condition: (s) => s.streak >= 30 },
-  { id: 'weight_down_2', icon: '📉', name: 'Мінус 2 кг', desc: 'Схуднути на 2 кг', condition: (s) => s.weightLost >= 2 },
-  { id: 'weight_down_5', icon: '💎', name: 'Мінус 5 кг', desc: 'Схуднути на 5 кг', condition: (s) => s.weightLost >= 5 },
-  { id: 'workouts_10', icon: '🏅', name: 'Десяток', desc: '10 тренувань всього', condition: (s) => s.totalWorkouts >= 10 },
-  { id: 'workouts_20', icon: '🥈', name: 'Двадцятка', desc: '20 тренувань всього', condition: (s) => s.totalWorkouts >= 20 },
-  { id: 'workouts_50', icon: '🥇', name: 'Ветеран', desc: '50 тренувань всього', condition: (s) => s.totalWorkouts >= 50 },
-];
-
-const LEVELS = [
-  { level: 1, name: 'Новачок', minXP: 0 },
-  { level: 2, name: 'Початківець', minXP: 200 },
-  { level: 3, name: 'Атлет', minXP: 500 },
-  { level: 4, name: 'Воїн', minXP: 900 },
-  { level: 5, name: 'Чемпіон', minXP: 1400 },
-  { level: 6, name: 'Майстер', minXP: 2000 },
-  { level: 7, name: 'Легенда', minXP: 3000 },
-];
-
-const CARDIO_OPTIONS = [
-  { id: 'easy', icon: '🚶', label: 'Легко', desc: 'Спокійна ходьба', xp: 15 },
-  { id: 'medium', icon: '🚶‍♂️', label: 'Середньо', desc: 'Бадьора ходьба', xp: 25 },
-  { id: 'hard', icon: '🏃', label: 'Інтенсивно', desc: 'Швидка ходьба / ухил', xp: 40 },
-];
-
-// ─── STORAGE ──────────────────────────────────────────────────────────────────
-const KEYS = { profile: 'gb_profile', workouts: 'gb_workouts', weights: 'gb_weights', achievements: 'gb_ach' };
-const load = (k, def) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch { return def; } };
-const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
-
-function getInitProfile() {
-  return load(KEYS.profile, { xp: 0, streak: 0, lastWorkoutDate: null, totalWorkouts: 0 });
-}
-
-// ─── UTILS ────────────────────────────────────────────────────────────────────
-function today() { return new Date().toISOString().slice(0, 10); }
-function todayWeekday() { return new Date().getDay(); }
-function formatDate(iso) {
-  const d = new Date(iso + 'T12:00:00');
-  return d.toLocaleDateString('uk-UA', { day: 'numeric', month: 'short' });
-}
-function getLevel(xp) {
-  let current = LEVELS[0];
-  for (const l of LEVELS) { if (xp >= l.minXP) current = l; }
-  const idx = LEVELS.indexOf(current);
-  const next = LEVELS[idx + 1];
-  return { ...current, next, progress: next ? (xp - current.minXP) / (next.minXP - current.minXP) : 1 };
-}
-function getWeekDates() {
-  const now = new Date();
-  const day = now.getDay();
-  const mon = new Date(now);
-  mon.setDate(now.getDate() - (day === 0 ? 6 : day - 1));
-  return Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(mon);
-    d.setDate(mon.getDate() + i);
-    return d.toISOString().slice(0, 10);
-  });
-}
-
-// ─── MINI LINE CHART ──────────────────────────────────────────────────────────
-function LineChart({ data, color = '#6c63ff' }) {
-  if (!data || data.length < 2) return React.createElement('div', { className: 'text-xs', style: { textAlign: 'center', paddingTop: 30 } }, 'Ще недостатньо даних');
-  const vals = data.map(d => d.value);
-  const min = Math.min(...vals);
-  const max = Math.max(...vals);
-  const range = max - min || 1;
-  const W = 300, H = 70;
-  const points = vals.map((v, i) => {
-    const x = (i / (vals.length - 1)) * W;
-    const y = H - ((v - min) / range) * (H - 10) - 5;
-    return `${x},${y}`;
-  }).join(' ');
-  const areaPoints = `0,${H} ` + points + ` ${W},${H}`;
-  return React.createElement('svg', { viewBox: `0 0 ${W} ${H}`, className: 'chart-svg', preserveAspectRatio: 'none' },
-    React.createElement('defs', null,
-      React.createElement('linearGradient', { id: 'chartGrad', x1: '0', y1: '0', x2: '0', y2: '1' },
-        React.createElement('stop', { offset: '0%', stopColor: color, stopOpacity: '0.3' }),
-        React.createElement('stop', { offset: '100%', stopColor: color, stopOpacity: '0' })
-      )
-    ),
-    React.createElement('polygon', { points: areaPoints, fill: 'url(#chartGrad)' }),
-    React.createElement('polyline', { points, fill: 'none', stroke: color, strokeWidth: '2', strokeLinecap: 'round', strokeLinejoin: 'round' }),
-    vals.map((v, i) => {
-      const x = (i / (vals.length - 1)) * W;
-      const y = H - ((v - min) / range) * (H - 10) - 5;
-      return React.createElement('circle', { key: i, cx: x, cy: y, r: 3, fill: color });
-    })
+function FrontBodySVG({primary=[],secondary=[]}){
+  const col=id=>primary.includes(id)?MUSCLE_COLORS.primary:secondary.includes(id)?MUSCLE_COLORS.secondary:MUSCLE_COLORS.inactive;
+  const oc=id=>primary.includes(id)?'rgba(108,99,255,0.8)':secondary.includes(id)?'rgba(108,99,255,0.4)':MUSCLE_COLORS.outline;
+  return React.createElement('svg',{viewBox:'0 0 80 195',width:80,height:130},
+    // body outline bg
+    React.createElement('path',{d:'M40,2 Q51,2 51,13 Q51,20 45,22 L47,29 Q58,29 64,35 Q72,40 72,52 L70,88 Q68,96 58,98 L55,110 L57,145 L52,145 L50,110 L46,110 L44,145 L39,145 L37,110 L34,110 L30,145 L25,145 L27,110 L22,98 Q12,96 10,88 L8,52 Q8,40 16,35 Q22,29 33,29 L35,22 Q29,20 29,13 Q29,2 40,2 Z',fill:'rgba(30,30,50,0.9)',stroke:'rgba(80,80,120,0.5)',strokeWidth:0.5}),
+    // head
+    React.createElement('ellipse',{cx:40,cy:12,rx:11,ry:12,fill:'rgba(50,50,70,0.8)',stroke:'rgba(80,80,120,0.5)',strokeWidth:0.5}),
+    // chest left
+    React.createElement('path',{d:'M22,34 Q18,44 20,55 Q26,59 34,54 Q38,46 36,34 Z',fill:col('chest'),stroke:oc('chest'),strokeWidth:0.5}),
+    // chest right
+    React.createElement('path',{d:'M58,34 Q62,44 60,55 Q54,59 46,54 Q42,46 44,34 Z',fill:col('upper_chest')||col('chest'),stroke:oc('chest'),strokeWidth:0.5}),
+    // upper chest highlight
+    primary.includes('upper_chest')&&React.createElement('path',{d:'M22,34 Q18,40 20,46 Q26,50 34,46 Q38,40 36,34 Z',fill:MUSCLE_COLORS.primary,stroke:'none',opacity:0.6}),
+    primary.includes('upper_chest')&&React.createElement('path',{d:'M58,34 Q62,40 60,46 Q54,50 46,46 Q42,40 44,34 Z',fill:MUSCLE_COLORS.primary,stroke:'none',opacity:0.6}),
+    // front delt left
+    React.createElement('ellipse',{cx:16,cy:35,rx:7,ry:8,fill:col('front_delt'),stroke:oc('front_delt'),strokeWidth:0.5}),
+    // front delt right
+    React.createElement('ellipse',{cx:64,cy:35,rx:7,ry:8,fill:col('front_delt'),stroke:oc('front_delt'),strokeWidth:0.5}),
+    // mid delt left
+    React.createElement('ellipse',{cx:10,cy:45,rx:5,ry:6,fill:col('mid_delt'),stroke:oc('mid_delt'),strokeWidth:0.5}),
+    // mid delt right
+    React.createElement('ellipse',{cx:70,cy:45,rx:5,ry:6,fill:col('mid_delt'),stroke:oc('mid_delt'),strokeWidth:0.5}),
+    // bicep left
+    React.createElement('ellipse',{cx:11,cy:58,rx:6,ry:11,fill:col('biceps'),stroke:oc('biceps'),strokeWidth:0.5}),
+    // bicep right
+    React.createElement('ellipse',{cx:69,cy:58,rx:6,ry:11,fill:col('biceps'),stroke:oc('biceps'),strokeWidth:0.5}),
+    // forearm left
+    React.createElement('rect',{x:7,y:70,width:9,height:16,rx:4,fill:'rgba(40,40,60,0.7)',stroke:MUSCLE_COLORS.outline,strokeWidth:0.5}),
+    React.createElement('rect',{x:64,y:70,width:9,height:16,rx:4,fill:'rgba(40,40,60,0.7)',stroke:MUSCLE_COLORS.outline,strokeWidth:0.5}),
+    // abs
+    React.createElement('rect',{x:31,y:57,width:8,height:8,rx:2,fill:col('abs'),stroke:oc('abs'),strokeWidth:0.5}),
+    React.createElement('rect',{x:41,y:57,width:8,height:8,rx:2,fill:col('abs'),stroke:oc('abs'),strokeWidth:0.5}),
+    React.createElement('rect',{x:31,y:67,width:8,height:8,rx:2,fill:col('abs'),stroke:oc('abs'),strokeWidth:0.5}),
+    React.createElement('rect',{x:41,y:67,width:8,height:8,rx:2,fill:col('abs'),stroke:oc('abs'),strokeWidth:0.5}),
+    React.createElement('rect',{x:31,y:77,width:8,height:7,rx:2,fill:col('abs'),stroke:oc('abs'),strokeWidth:0.5}),
+    React.createElement('rect',{x:41,y:77,width:8,height:7,rx:2,fill:col('abs'),stroke:oc('abs'),strokeWidth:0.5}),
+    // obliques
+    React.createElement('ellipse',{cx:25,cy:74,rx:5,ry:10,fill:col('obliques'),stroke:oc('obliques'),strokeWidth:0.5}),
+    React.createElement('ellipse',{cx:55,cy:74,rx:5,ry:10,fill:col('obliques'),stroke:oc('obliques'),strokeWidth:0.5}),
+    // triceps front visible
+    React.createElement('ellipse',{cx:11,cy:46,rx:5,ry:7,fill:col('triceps'),stroke:oc('triceps'),strokeWidth:0.5,opacity:0.7}),
+    React.createElement('ellipse',{cx:69,cy:46,rx:5,ry:7,fill:col('triceps'),stroke:oc('triceps'),strokeWidth:0.5,opacity:0.7}),
+    // quads left
+    React.createElement('path',{d:'M22,100 L18,148 L30,150 L32,100 Z',fill:col('quads'),stroke:oc('quads'),strokeWidth:0.5}),
+    React.createElement('path',{d:'M32,100 L33,150 L40,148 L42,100 Z',fill:col('quads'),stroke:oc('quads'),strokeWidth:0.5,opacity:0.8}),
+    // quads right
+    React.createElement('path',{d:'M58,100 L62,148 L50,150 L48,100 Z',fill:col('quads'),stroke:oc('quads'),strokeWidth:0.5}),
+    React.createElement('path',{d:'M48,100 L47,150 L40,148 L38,100 Z',fill:col('quads'),stroke:oc('quads'),strokeWidth:0.5,opacity:0.8}),
+    // calves front
+    React.createElement('ellipse',{cx:25,cy:168,rx:7,ry:14,fill:col('calves'),stroke:oc('calves'),strokeWidth:0.5}),
+    React.createElement('ellipse',{cx:55,cy:168,rx:7,ry:14,fill:col('calves'),stroke:oc('calves'),strokeWidth:0.5}),
   );
 }
 
-// ─── TOAST ────────────────────────────────────────────────────────────────────
-function Toast({ msg, onDone }) {
-  useEffect(() => { const t = setTimeout(onDone, 2500); return () => clearTimeout(t); }, []);
-  return React.createElement('div', { className: 'toast' }, msg);
+function BackBodySVG({primary=[],secondary=[]}){
+  const col=id=>primary.includes(id)?MUSCLE_COLORS.primary:secondary.includes(id)?MUSCLE_COLORS.secondary:MUSCLE_COLORS.inactive;
+  const oc=id=>primary.includes(id)?'rgba(108,99,255,0.8)':secondary.includes(id)?'rgba(108,99,255,0.4)':MUSCLE_COLORS.outline;
+  return React.createElement('svg',{viewBox:'0 0 80 195',width:80,height:130},
+    // body outline
+    React.createElement('path',{d:'M40,2 Q51,2 51,13 Q51,20 45,22 L47,29 Q58,29 64,35 Q72,40 72,52 L70,88 Q68,96 58,98 L55,110 L57,145 L52,145 L50,110 L46,110 L44,145 L39,145 L37,110 L34,110 L30,145 L25,145 L27,110 L22,98 Q12,96 10,88 L8,52 Q8,40 16,35 Q22,29 33,29 L35,22 Q29,20 29,13 Q29,2 40,2 Z',fill:'rgba(30,30,50,0.9)',stroke:'rgba(80,80,120,0.5)',strokeWidth:0.5}),
+    React.createElement('ellipse',{cx:40,cy:12,rx:11,ry:12,fill:'rgba(50,50,70,0.8)',stroke:'rgba(80,80,120,0.5)',strokeWidth:0.5}),
+    // traps
+    React.createElement('path',{d:'M28,28 L40,24 L52,28 L55,40 L40,43 L25,40 Z',fill:col('traps'),stroke:oc('traps'),strokeWidth:0.5}),
+    // rear delt left
+    React.createElement('ellipse',{cx:16,cy:36,rx:7,ry:8,fill:col('rear_delt'),stroke:oc('rear_delt'),strokeWidth:0.5}),
+    React.createElement('ellipse',{cx:64,cy:36,rx:7,ry:8,fill:col('rear_delt'),stroke:oc('rear_delt'),strokeWidth:0.5}),
+    // tricep left/right
+    React.createElement('ellipse',{cx:11,cy:54,rx:6,ry:12,fill:col('triceps'),stroke:oc('triceps'),strokeWidth:0.5}),
+    React.createElement('ellipse',{cx:69,cy:54,rx:6,ry:12,fill:col('triceps'),stroke:oc('triceps'),strokeWidth:0.5}),
+    // lats
+    React.createElement('path',{d:'M22,40 L16,70 L30,76 L36,57 L28,40 Z',fill:col('lats'),stroke:oc('lats'),strokeWidth:0.5}),
+    React.createElement('path',{d:'M58,40 L64,70 L50,76 L44,57 L52,40 Z',fill:col('lats'),stroke:oc('lats'),strokeWidth:0.5}),
+    // lower back
+    React.createElement('rect',{x:31,y:72,width:18,height:18,rx:4,fill:col('lower_back'),stroke:oc('lower_back'),strokeWidth:0.5}),
+    // glutes
+    React.createElement('ellipse',{cx:30,cy:100,rx:13,ry:11,fill:col('glutes'),stroke:oc('glutes'),strokeWidth:0.5}),
+    React.createElement('ellipse',{cx:50,cy:100,rx:13,ry:11,fill:col('glutes'),stroke:oc('glutes'),strokeWidth:0.5}),
+    // hamstrings
+    React.createElement('ellipse',{cx:28,cy:128,rx:10,ry:18,fill:col('hamstrings'),stroke:oc('hamstrings'),strokeWidth:0.5}),
+    React.createElement('ellipse',{cx:52,cy:128,rx:10,ry:18,fill:col('hamstrings'),stroke:oc('hamstrings'),strokeWidth:0.5}),
+    // calves back
+    React.createElement('ellipse',{cx:26,cy:167,rx:7,ry:14,fill:col('calves'),secondary:oc('calves'),stroke:oc('calves'),strokeWidth:0.5}),
+    React.createElement('ellipse',{cx:54,cy:167,rx:7,ry:14,fill:col('calves'),stroke:oc('calves'),strokeWidth:0.5}),
+  );
 }
 
-// ─── MAIN APP ─────────────────────────────────────────────────────────────────
-function App() {
-  const [tab, setTab] = useState('home');
-  const [profile, setProfile] = useState(getInitProfile);
-  const [workouts, setWorkouts] = useState(() => load(KEYS.workouts, []));
-  const [weights, setWeights] = useState(() => load(KEYS.weights, []));
-  const [unlockedAch, setUnlockedAch] = useState(() => load(KEYS.achievements, []));
-  const [toast, setToast] = useState(null);
-  const [activeWorkout, setActiveWorkout] = useState(null); // { dayId, date, sets: {exId: [{weight,reps,done}]}, cardio, completed }
+const MUSCLE_NAMES_UK={
+  chest:'Груди',upper_chest:'Верх грудей',front_delt:'Передня дельта',mid_delt:'Середня дельта',
+  rear_delt:'Задня дельта',biceps:'Біцепс',triceps:'Трицепс',abs:'Прес',obliques:'Косі',
+  quads:'Квадрицепс',hamstrings:'Задня стегна',glutes:'Сідниці',calves:'Гомілки',
+  lats:'Найширший спини',traps:'Трапеція',lower_back:'Поперек',
+};
 
-  const showToast = useCallback((msg) => setToast(msg), []);
+function MuscleDiagram({muscles}){
+  if(!muscles)return null;
+  const {primary=[],secondary=[],view='front'}=muscles;
+  const showFront=view==='front'||view==='both';
+  const showBack=view==='back'||view==='both';
+  return React.createElement('div',null,
+    React.createElement('div',{className:'muscle-wrap'},
+      showFront&&React.createElement('div',{className:'muscle-svg-box'},
+        React.createElement(FrontBodySVG,{primary,secondary}),
+        React.createElement('div',{className:'muscle-svg-label'},'Вигляд спереду')
+      ),
+      showBack&&React.createElement('div',{className:'muscle-svg-box'},
+        React.createElement(BackBodySVG,{primary,secondary}),
+        React.createElement('div',{className:'muscle-svg-label'},'Вигляд ззаду')
+      ),
+    ),
+    React.createElement('div',{className:'muscle-tags'},
+      primary.map(m=>React.createElement('span',{key:m,className:'muscle-tag-primary'},MUSCLE_NAMES_UK[m]||m)),
+      secondary.map(m=>React.createElement('span',{key:m,className:'muscle-tag-secondary'},MUSCLE_NAMES_UK[m]||m)),
+    )
+  );
+}
 
-  const addXP = useCallback((amount, reason) => {
-    setProfile(p => {
-      const np = { ...p, xp: (p.xp || 0) + amount };
-      save(KEYS.profile, np);
-      return np;
-    });
-    showToast(`+${amount} XP — ${reason}!`);
-  }, [showToast]);
+// ── LINE CHART ────────────────────────────────────────────────────────────────
+function LineChart({data,color='#6c63ff'}){
+  if(!data||data.length<2)return React.createElement('div',{className:'text-xs',style:{textAlign:'center',paddingTop:28}},'Ще недостатньо даних');
+  const vals=data.map(d=>d.value);
+  const min=Math.min(...vals),max=Math.max(...vals),range=max-min||1;
+  const W=300,H=70;
+  const pts=vals.map((v,i)=>`${(i/(vals.length-1))*W},${H-((v-min)/range)*(H-10)-5}`).join(' ');
+  return React.createElement('svg',{viewBox:`0 0 ${W} ${H}`,className:'chart-svg',preserveAspectRatio:'none'},
+    React.createElement('defs',null,React.createElement('linearGradient',{id:'cg',x1:'0',y1:'0',x2:'0',y2:'1'},React.createElement('stop',{offset:'0%',stopColor:color,stopOpacity:'0.3'}),React.createElement('stop',{offset:'100%',stopColor:color,stopOpacity:'0'}))),
+    React.createElement('polygon',{points:`0,${H} ${pts} ${W},${H}`,fill:'url(#cg)'}),
+    React.createElement('polyline',{points:pts,fill:'none',stroke:color,strokeWidth:'2',strokeLinecap:'round',strokeLinejoin:'round'}),
+    vals.map((v,i)=>{const x=(i/(vals.length-1))*W,y=H-((v-min)/range)*(H-10)-5;return React.createElement('circle',{key:i,cx:x,cy:y,r:3,fill:color});})
+  );
+}
 
-  const checkAchievements = useCallback((stats) => {
-    setUnlockedAch(prev => {
-      const newUnlocked = [];
-      for (const a of ACHIEVEMENTS) {
-        if (!prev.includes(a.id) && a.condition(stats)) {
-          newUnlocked.push(a.id);
-        }
-      }
-      if (newUnlocked.length > 0) {
-        const next = [...prev, ...newUnlocked];
-        save(KEYS.achievements, next);
-        setTimeout(() => showToast(`🏆 Досягнення: ${ACHIEVEMENTS.find(a => a.id === newUnlocked[0])?.name}!`), 1000);
+// ── TOAST ────────────────────────────────────────────────────────────────────
+function Toast({msg,onDone}){
+  useEffect(()=>{const t=setTimeout(onDone,2600);return()=>clearTimeout(t);},[]);
+  return React.createElement('div',{className:'toast'},msg);
+}
+
+// ── APP ───────────────────────────────────────────────────────────────────────
+function App(){
+  const [tab,setTab]=useState('home');
+  const [profile,setProfile]=useState(()=>LS.load('gb_profile',{xp:0,totalWorkouts:0}));
+  const [workouts,setWorkouts]=useState(()=>LS.load('gb_workouts',[]));
+  const [weights,setWeights]=useState(()=>LS.load('gb_weights',[]));
+  const [unlockedAch,setUnlockedAch]=useState(()=>LS.load('gb_ach',[]));
+  const [toast,setToast]=useState(null);
+  const [activeWorkout,setActiveWorkout]=useState(null);
+  const [calDetail,setCalDetail]=useState(null); // workout to show in modal
+
+  const showToast=useCallback(msg=>setToast(msg),[]);
+
+  const stats=useMemo(()=>{
+    const total=workouts.length;
+    const weekDates=getWeekDates();
+    const week=workouts.filter(w=>weekDates.includes(w.date)).length;
+    let streak=0;
+    const dates=[...new Set(workouts.map(w=>w.date))].sort().reverse();
+    let check=new Date(todayStr());
+    for(const d of dates){
+      const ds=check.toISOString().slice(0,10);
+      if(d===ds||d===new Date(check.getTime()-86400000).toISOString().slice(0,10)){streak++;check=new Date(ds);check.setDate(check.getDate()-1);}
+      else break;
+    }
+    let lost=0;
+    if(weights.length>=2)lost=Math.max(0,weights[0].value-weights[weights.length-1].value);
+    const hasS=workouts.some(w=>calcScore(w)>=90);
+    return{total,week,streak,lost,hasS};
+  },[workouts,weights]);
+
+  const checkAch=useCallback((newStats)=>{
+    setUnlockedAch(prev=>{
+      const added=[];
+      for(const a of ACHIEVEMENTS)if(!prev.includes(a.id)&&a.c(newStats))added.push(a.id);
+      if(added.length){
+        const next=[...prev,...added];
+        LS.save('gb_ach',next);
+        setTimeout(()=>showToast(`🏆 ${ACHIEVEMENTS.find(a=>a.id===added[0])?.name}!`),800);
         return next;
       }
       return prev;
     });
-  }, [showToast]);
+  },[showToast]);
 
-  // Compute stats
-  const stats = useMemo(() => {
-    const totalWorkouts = workouts.length;
-    const weekDates = getWeekDates();
-    const weekWorkouts = workouts.filter(w => weekDates.includes(w.date)).length;
-    // streak
-    let streak = 0;
-    const sortedDates = [...new Set(workouts.map(w => w.date))].sort().reverse();
-    const t = today();
-    let check = new Date(t);
-    for (const d of sortedDates) {
-      const ds = check.toISOString().slice(0, 10);
-      if (d === ds || d === new Date(check.getTime() - 86400000).toISOString().slice(0, 10)) {
-        streak++;
-        check = new Date(ds);
-        check.setDate(check.getDate() - 1);
-      } else break;
-    }
-    // weight lost
-    let weightLost = 0;
-    if (weights.length >= 2) {
-      const first = weights[0].value;
-      const last = weights[weights.length - 1].value;
-      weightLost = Math.max(0, first - last);
-    }
-    return { totalWorkouts, weekWorkouts, streak, weightLost };
-  }, [workouts, weights]);
+  const saveWorkout=useCallback(workout=>{
+    const score=calcScore(workout);
+    const xp=80+(CARDIO_OPTIONS.find(c=>c.id===workout.cardio)?.xp||15)+Math.round(score/5);
+    const newWorkouts=workouts.filter(w=>!(w.date===workout.date&&w.dayId===workout.dayId));
+    newWorkouts.push({...workout,score,volume:calcVolume(workout)});
+    setWorkouts(newWorkouts);
+    LS.save('gb_workouts',newWorkouts);
+    const np={...profile,xp:(profile.xp||0)+xp,totalWorkouts:(profile.totalWorkouts||0)+1};
+    setProfile(np);LS.save('gb_profile',np);
+    showToast(`✅ Збережено! +${xp} XP • Оцінка: ${scoreGrade(score).g}`);
+    setTimeout(()=>checkAch({...stats,total:stats.total+1,hasS:stats.hasS||(score>=90)}),600);
+    setActiveWorkout(null);setTab('home');
+  },[workouts,profile,stats,checkAch,showToast]);
 
-  const saveWorkout = useCallback((workout) => {
-    const xpGained = 100 + (CARDIO_OPTIONS.find(c => c.id === workout.cardio)?.xp || 0);
-    setWorkouts(prev => {
-      const next = [...prev.filter(w => !(w.date === workout.date && w.dayId === workout.dayId)), workout];
-      save(KEYS.workouts, next);
-      return next;
-    });
-    setProfile(p => {
-      const np = { ...p, xp: (p.xp || 0) + xpGained, totalWorkouts: (p.totalWorkouts || 0) + 1, lastWorkoutDate: workout.date };
-      save(KEYS.profile, np);
-      return np;
-    });
-    showToast(`✅ Тренування збережено! +${xpGained} XP`);
-    setTimeout(() => checkAchievements({ ...stats, totalWorkouts: stats.totalWorkouts + 1 }), 500);
-    setActiveWorkout(null);
-    setTab('home');
-  }, [stats, checkAchievements, showToast]);
+  const level=getLevel(profile.xp||0);
 
-  const level = getLevel(profile.xp || 0);
-  const weekDates = getWeekDates();
-  const dayNames = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'];
-
-  return React.createElement('div', { id: 'app' },
-    toast && React.createElement(Toast, { msg: toast, onDone: () => setToast(null) }),
+  return React.createElement('div',null,
+    toast&&React.createElement(Toast,{msg:toast,onDone:()=>setToast(null)}),
+    calDetail&&React.createElement(WorkoutDetailModal,{workout:calDetail,onClose:()=>setCalDetail(null)}),
     activeWorkout
-      ? React.createElement(WorkoutScreen, { workout: activeWorkout, setWorkout: setActiveWorkout, onSave: saveWorkout, onBack: () => setActiveWorkout(null) })
-      : React.createElement('div', null,
-          tab === 'home' && React.createElement(HomeTab, { profile, level, stats, workouts, weights, weekDates, dayNames, setActiveWorkout, setTab }),
-          tab === 'train' && React.createElement(TrainTab, { workouts, setActiveWorkout }),
-          tab === 'progress' && React.createElement(ProgressTab, { weights, setWeights, workouts, addXP }),
-          tab === 'achievements' && React.createElement(AchievementsTab, { unlockedAch, stats }),
+      ?React.createElement(WorkoutScreen,{workout:activeWorkout,onSave:saveWorkout,onBack:()=>setActiveWorkout(null)})
+      :React.createElement('div',null,
+          tab==='home'&&React.createElement(HomeTab,{profile,level,stats,workouts,weights,setActiveWorkout,setTab}),
+          tab==='train'&&React.createElement(TrainTab,{workouts,setActiveWorkout}),
+          tab==='calendar'&&React.createElement(CalendarTab,{workouts,onSelect:setCalDetail}),
+          tab==='progress'&&React.createElement(ProgressTab,{weights,setWeights,workouts,showToast,profile,unlockedAch,stats}),
         ),
-    !activeWorkout && React.createElement(BottomNav, { tab, setTab })
+    !activeWorkout&&React.createElement(BottomNav,{tab,setTab})
   );
 }
 
-// ─── HOME TAB ─────────────────────────────────────────────────────────────────
-function HomeTab({ profile, level, stats, workouts, weights, weekDates, dayNames, setActiveWorkout, setTab }) {
-  const todayWd = todayWeekday();
-  const todayDayId = WEEK_SCHEDULE[todayWd];
-  const todayStr = today();
-  const todayDone = workouts.some(w => w.date === todayStr);
-  const lastWeight = weights.length > 0 ? weights[weights.length - 1].value : null;
-  const startWeight = weights.length > 0 ? weights[0].value : null;
-  const weightDiff = startWeight && lastWeight ? (lastWeight - startWeight).toFixed(1) : null;
+// ── HOME ─────────────────────────────────────────────────────────────────────
+function HomeTab({profile,level,stats,workouts,weights,setActiveWorkout,setTab}){
+  const [quote]=useState(()=>QUOTES[Math.floor(Math.random()*QUOTES.length)]);
+  const t=todayStr();
+  const todayDone=workouts.some(w=>w.date===t);
+  const lastWeight=weights.length>0?weights[weights.length-1].value:null;
+  const weekDates=getWeekDates();
+  const dayNames=['Пн','Вт','Ср','Чт','Пт','Сб','Нд'];
 
-  return React.createElement('div', null,
-    // Header
-    React.createElement('div', { className: 'page-header' },
-      React.createElement('div', { className: 'flex-between' },
-        React.createElement('div', null,
-          React.createElement('div', { className: 'text-xs' }, '👋 Вітаю,'),
-          React.createElement('h1', null, 'GymBeast')
+  return React.createElement('div',null,
+    React.createElement('div',{className:'page-header'},
+      React.createElement('div',{className:'flex-between'},
+        React.createElement('div',null,
+          React.createElement('div',{className:'text-xs'},'👋 Вітаю,'),
+          React.createElement('h1',null,'GymBeast 💪')
         ),
-        React.createElement('div', { className: 'level-badge' }, `⚡ ${level.name}`)
+        React.createElement('div',{className:'level-badge'},`⚡ ${level.name}`)
       ),
-      // XP bar
-      React.createElement('div', { style: { marginTop: 14 } },
-        React.createElement('div', { className: 'flex-between' },
-          React.createElement('span', { className: 'text-xs' }, `Рівень ${level.level} • ${profile.xp || 0} XP`),
-          level.next && React.createElement('span', { className: 'text-xs' }, `до рівня ${level.level + 1}: ${level.next.minXP - (profile.xp || 0)} XP`)
+      React.createElement('div',{style:{marginTop:14}},
+        React.createElement('div',{className:'flex-between'},
+          React.createElement('span',{className:'text-xs'},`Рівень ${level.level} • ${profile.xp||0} XP`),
+          level.next&&React.createElement('span',{className:'text-xs'},`до ${level.level+1}: ${level.next.minXP-(profile.xp||0)} XP`)
         ),
-        React.createElement('div', { className: 'xp-bar-wrap' },
-          React.createElement('div', { className: 'xp-bar', style: { width: `${(level.progress * 100).toFixed(0)}%` } })
-        )
+        React.createElement('div',{className:'xp-bar-wrap'},React.createElement('div',{className:'xp-bar',style:{width:`${Math.round(level.progress*100)}%`}}))
       )
     ),
 
-    // Week calendar
-    React.createElement('div', { style: { paddingTop: 16 } },
-      React.createElement('div', { className: 'week-row' },
-        weekDates.map((dateStr, i) => {
-          const wd = new Date(dateStr + 'T12:00:00').getDay();
-          const dayNum = new Date(dateStr + 'T12:00:00').getDate();
-          const isToday = dateStr === todayStr;
-          const isDone = workouts.some(w => w.date === dateStr);
-          const isTraining = WEEK_SCHEDULE[wd] !== null;
-          let cls = 'wd-dot ';
-          if (isToday) cls += 'today';
-          else if (isDone) cls += 'done';
-          else if (isTraining) cls += 'training';
-          else cls += 'rest';
-          return React.createElement('div', { key: dateStr, className: 'week-day' },
-            React.createElement('div', { className: 'wd-label' }, dayNames[i]),
-            React.createElement('div', { className: cls }, dayNum)
+    React.createElement('div',{style:{paddingTop:16}},
+      React.createElement('div',{className:'week-row'},
+        weekDates.map((ds,i)=>{
+          const isT=ds===t;
+          const isDone=workouts.some(w=>w.date===ds);
+          const cls='wd-dot '+(isT?'today':isDone?'done':'past');
+          return React.createElement('div',{key:ds,className:'week-day'},
+            React.createElement('div',{className:'wd-label'},dayNames[i]),
+            React.createElement('div',{className:cls},new Date(ds+'T12:00:00').getDate())
           );
         })
       )
     ),
 
-    // Stats row
-    React.createElement('div', { className: 'stats-row' },
-      React.createElement('div', { className: 'stat-card' },
-        React.createElement('div', { className: 'stat-val' }, stats.streak),
-        React.createElement('div', { className: 'stat-label' }, '🔥 Серія')
-      ),
-      React.createElement('div', { className: 'stat-card' },
-        React.createElement('div', { className: 'stat-val' }, stats.totalWorkouts),
-        React.createElement('div', { className: 'stat-label' }, '💪 Всього')
-      ),
-      React.createElement('div', { className: 'stat-card' },
-        React.createElement('div', { className: 'stat-val', style: { fontSize: 18 } }, lastWeight ? `${lastWeight}` : '—'),
-        React.createElement('div', { className: 'stat-label' }, '⚖️ Вага кг')
+    React.createElement('div',{className:'stats-row'},
+      React.createElement('div',{className:'stat-card'},React.createElement('div',{className:'stat-val'},stats.streak),React.createElement('div',{className:'stat-label'},'🔥 Серія')),
+      React.createElement('div',{className:'stat-card'},React.createElement('div',{className:'stat-val'},stats.total),React.createElement('div',{className:'stat-label'},'💪 Всього')),
+      React.createElement('div',{className:'stat-card'},React.createElement('div',{className:'stat-val',style:{fontSize:18}},lastWeight||'—'),React.createElement('div',{className:'stat-label'},'⚖️ кг'))
+    ),
+
+    React.createElement('div',{className:'quote-card'},
+      React.createElement('div',{className:'quote-text'},`"${quote.text}"`),
+      React.createElement('div',{className:'quote-author'},`— ${quote.author}`)
+    ),
+
+    React.createElement('div',{className:'card'},
+      React.createElement('div',{className:'card-title'},'🏋️ Обери тренування'),
+      React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}},
+        [1,2,3,4].map(id=>{
+          const d=TRAINING_DAYS[id];
+          const done=workouts.some(w=>w.date===t&&w.dayId===id);
+          return React.createElement('div',{key:id,
+            style:{background:'var(--bg2)',borderRadius:12,padding:12,border:'1px solid var(--border)',cursor:'pointer',position:'relative',opacity:done?0.7:1},
+            onClick:()=>setActiveWorkout({dayId:id,date:t,sets:{},cardio:'medium'})},
+            done&&React.createElement('div',{style:{position:'absolute',top:6,right:6,background:'var(--green)',borderRadius:999,width:16,height:16,display:'flex',alignItems:'center',justifyContent:'center',fontSize:9,color:'#fff'}},'✓'),
+            React.createElement('div',{style:{fontSize:22,marginBottom:4}},d.emoji),
+            React.createElement('div',{style:{fontSize:12,fontWeight:600}},d.title),
+            React.createElement('div',{className:'text-xs',style:{marginTop:2}},d.subtitle)
+          );
+        })
       )
     ),
 
-    // Today's workout
-    React.createElement('div', { className: 'card' },
-      React.createElement('div', { className: 'card-title' }, '📅 Сьогодні'),
-      todayDayId
-        ? React.createElement('div', null,
-            React.createElement('div', { className: 'flex-between' },
-              React.createElement('div', null,
-                React.createElement('div', { style: { fontSize: 28, marginBottom: 4 } }, TRAINING_DAYS[todayDayId].emoji),
-                React.createElement('div', { style: { fontWeight: 700, fontSize: 18 } }, TRAINING_DAYS[todayDayId].title),
-                React.createElement('div', { className: 'text-xs', style: { marginTop: 4 } }, TRAINING_DAYS[todayDayId].subtitle)
-              ),
-              todayDone && React.createElement('span', { className: 'pill pill-green' }, '✓ Виконано')
-            ),
-            !todayDone && React.createElement('button', { className: 'btn-primary', style: { marginTop: 12 }, onClick: () => setActiveWorkout({ dayId: todayDayId, date: todayStr, sets: {}, cardio: 'medium', completed: false }) }, '🚀 Розпочати тренування'),
-            todayDone && React.createElement('button', { className: 'btn-secondary', style: { marginTop: 12 }, onClick: () => setTab('progress') }, '📊 Переглянути прогрес')
-          )
-        : React.createElement('div', { style: { textAlign: 'center', padding: '16px 0' } },
-            React.createElement('div', { style: { fontSize: 40, marginBottom: 8 } }, '😴'),
-            React.createElement('div', { style: { fontWeight: 600 } }, 'День відпочинку'),
-            React.createElement('div', { className: 'text-xs', style: { marginTop: 6 } }, 'Відпочинок — це теж частина тренування. М\'язи ростуть уночі!')
-          )
-    ),
-
-    // Motivation quote
-    React.createElement('div', { className: 'card' },
-      React.createElement('div', { style: { fontSize: 13, color: '#a855f7', fontStyle: 'italic', lineHeight: 1.5 } }, '"Починати треба з малого. Але починати треба зараз."'),
-      React.createElement('div', { className: 'text-xs', style: { marginTop: 6, textAlign: 'right' } }, '— Денис Борисов')
-    ),
-
-    // Крeatine reminder
-    React.createElement('div', { className: 'card', style: { background: 'rgba(59,130,246,0.1)', borderColor: 'rgba(59,130,246,0.4)' } },
-      React.createElement('div', { className: 'flex-between' },
-        React.createElement('div', null,
-          React.createElement('div', { style: { fontWeight: 600, fontSize: 14 } }, '💊 Нагадування'),
-          React.createElement('div', { className: 'text-xs', style: { marginTop: 4 } }, 'Прийняти 5 г креатину після тренування.\nУ дні відпочинку — вранці натщесерце.')
+    React.createElement('div',{className:'card',style:{background:'rgba(59,130,246,0.08)',borderColor:'rgba(59,130,246,0.3)'}},
+      React.createElement('div',{className:'flex-between'},
+        React.createElement('div',null,
+          React.createElement('div',{style:{fontWeight:600,fontSize:13}},'💊 Креатин'),
+          React.createElement('div',{className:'text-xs',style:{marginTop:4,lineHeight:1.5}},'5 г після тренування.\nУ дні відпочинку — вранці натщесерце.')
         ),
-        React.createElement('div', { style: { fontSize: 32 } }, '💪')
+        React.createElement('div',{style:{fontSize:30}},'💪')
       )
     )
   );
 }
 
-// ─── TRAIN TAB ────────────────────────────────────────────────────────────────
-function TrainTab({ workouts, setActiveWorkout }) {
-  const todayStr = today();
-  const todayWd = todayWeekday();
-
-  return React.createElement('div', null,
-    React.createElement('div', { className: 'page-header' },
-      React.createElement('h1', null, '🏋️ Тренування'),
-      React.createElement('p', null, 'Виберіть день тренування')
+// ── TRAIN TAB ────────────────────────────────────────────────────────────────
+function TrainTab({workouts,setActiveWorkout}){
+  const t=todayStr();
+  return React.createElement('div',null,
+    React.createElement('div',{className:'page-header'},
+      React.createElement('h1',null,'🏋️ Тренування'),
+      React.createElement('p',null,'Обери будь-яку групу м\'язів')
     ),
-    React.createElement('div', { style: { padding: '16px 16px 0' } },
-      [1, 2, 3, 4].map(dayId => {
-        const d = TRAINING_DAYS[dayId];
-        const wdNames = { 1: 'Понеділок', 2: 'Вівторок', 3: 'Четвер', 4: 'П\'ятниця' };
-        const todayTraining = WEEK_SCHEDULE[todayWd] === dayId;
-        const alreadyDone = workouts.some(w => w.date === todayStr && w.dayId === dayId);
-        return React.createElement('div', {
-          key: dayId,
-          className: `day-card${todayTraining ? ' active-day' : ''}${alreadyDone ? ' done-day' : ''}`,
-          onClick: () => setActiveWorkout({ dayId, date: todayStr, sets: {}, cardio: 'medium', completed: false })
-        },
-          alreadyDone && React.createElement('div', { className: 'done-badge' }, '✓ Сьогодні'),
-          React.createElement('div', { className: 'day-badge' },
-            React.createElement('span', null, d.emoji),
-            React.createElement('span', null, wdNames[dayId]),
-            todayTraining && React.createElement('span', { className: 'pill pill-accent', style: { fontSize: 10 } }, 'Сьогодні')
-          ),
-          React.createElement('h3', null, `${d.name}: ${d.title}`),
-          React.createElement('div', { className: 'day-sub' }, d.subtitle),
-          React.createElement('div', { style: { marginTop: 8, display: 'flex', gap: 6, flexWrap: 'wrap' } },
-            d.blocks.map(b => React.createElement('span', { key: b.id, className: 'pill pill-accent', style: { fontSize: 10 } }, b.exercises.length + ' вправи'))
+    React.createElement('div',{style:{padding:'16px 16px 0'}},
+      [1,2,3,4].map(id=>{
+        const d=TRAINING_DAYS[id];
+        const todayDone=workouts.some(w=>w.date===t&&w.dayId===id);
+        const totalEx=d.blocks.flatMap(b=>b.exercises).length;
+        return React.createElement('div',{key:id,className:'day-card',
+          style:{borderColor:todayDone?'var(--green)':'var(--border)'},
+          onClick:()=>setActiveWorkout({dayId:id,date:t,sets:{},cardio:'medium'})},
+          todayDone&&React.createElement('div',{style:{position:'absolute',top:12,right:12},className:'pill pill-green'},'✓ Сьогодні виконано'),
+          React.createElement('div',{style:{display:'flex',alignItems:'center',gap:12}},
+            React.createElement('div',{style:{fontSize:36}},d.emoji),
+            React.createElement('div',null,
+              React.createElement('h3',null,`${d.name}: ${d.title}`),
+              React.createElement('div',{className:'day-sub'},d.subtitle),
+              React.createElement('div',{style:{marginTop:8,display:'flex',gap:6,flexWrap:'wrap'}},
+                React.createElement('span',{className:'pill pill-accent'},`${totalEx} вправ`),
+                React.createElement('span',{className:'pill pill-orange'},'~75 хв'),
+                d.blocks.map(b=>React.createElement('span',{key:b.id,className:'pill',style:{background:'var(--bg3)',color:'var(--text2)',fontSize:10}},b.exercises.length+' вправи'))
+              )
+            )
           )
         );
-      }),
-      React.createElement('div', { className: 'rest-day-card' },
-        React.createElement('div', { style: { fontSize: 24, marginBottom: 6 } }, '😴'),
-        React.createElement('div', { style: { fontWeight: 600 } }, 'Середа, Субота, Неділя'),
-        React.createElement('div', { className: 'text-xs', style: { marginTop: 4 } }, 'Дні відпочинку — необхідні для відновлення і росту м\'язів')
-      )
+      })
     )
   );
 }
 
-// ─── WORKOUT SCREEN ───────────────────────────────────────────────────────────
-function WorkoutScreen({ workout, setWorkout, onSave, onBack }) {
-  const day = TRAINING_DAYS[workout.dayId];
-  const [sets, setSets] = useState(workout.sets || {});
-  const [cardio, setCardio] = useState(workout.cardio || 'medium');
-  const [phase, setPhase] = useState('warmup'); // warmup | exercise | cardio | done
-
-  const initSetsForExercise = (exId, ex) => {
-    if (sets[exId]) return sets[exId];
-    return Array.from({ length: 3 }, () => ({ weight: ex.defaultWeight, reps: ex.defaultReps, done: false }));
-  };
-
-  const updateSet = (exId, setIdx, field, value) => {
-    setSets(prev => {
-      const exSets = prev[exId] ? [...prev[exId]] : [];
-      exSets[setIdx] = { ...exSets[setIdx], [field]: value };
-      return { ...prev, [exId]: exSets };
+// ── WORKOUT SCREEN ────────────────────────────────────────────────────────────
+function WorkoutScreen({workout,onSave,onBack}){
+  const day=TRAINING_DAYS[workout.dayId];
+  const [sets,setSets]=useState(()=>{
+    const init={};
+    day.blocks.flatMap(b=>b.exercises).forEach(ex=>{
+      init[ex.id]=workout.sets[ex.id]||Array.from({length:3},()=>({weight:ex.dw,reps:ex.dr,done:false}));
     });
+    return init;
+  });
+  const [cardio,setCardio]=useState(workout.cardio||'medium');
+  const [phase,setPhase]=useState('warmup');
+  const [expandedEx,setExpandedEx]=useState(null);
+
+  const updateSet=(exId,si,field,value)=>{
+    setSets(prev=>{const s=[...prev[exId]];s[si]={...s[si],[field]:value};return{...prev,[exId]:s};});
+  };
+  const toggleDone=(exId,si)=>{
+    setSets(prev=>{const s=[...prev[exId]];s[si]={...s[si],done:!s[si].done};return{...prev,[exId]:s};});
   };
 
-  const toggleSetDone = (exId, setIdx) => {
-    setSets(prev => {
-      const exSets = [...(prev[exId] || [])];
-      exSets[setIdx] = { ...exSets[setIdx], done: !exSets[setIdx].done };
-      return { ...prev, [exId]: exSets };
-    });
-  };
-
-  const allExercises = day.blocks.flatMap(b => b.exercises);
-  allExercises.forEach(ex => { if (!sets[ex.id]) setSets(prev => ({ ...prev, [ex.id]: initSetsForExercise(ex.id, ex) })); });
-
-  const handleFinish = () => {
-    const finalWorkout = { ...workout, sets, cardio, completed: true, date: workout.date };
-    onSave(finalWorkout);
-  };
-
-  return React.createElement('div', { style: { minHeight: '100vh' } },
-    // Header
-    React.createElement('div', { className: 'page-header', style: { paddingTop: 50 } },
-      React.createElement('div', { className: 'flex-between', style: { marginBottom: 8 } },
-        React.createElement('button', { onClick: onBack, style: { background: 'none', border: 'none', color: 'var(--accent)', fontSize: 15, cursor: 'pointer' } }, '← Назад'),
-        React.createElement('span', { className: 'pill pill-accent' }, '75–80 хв')
+  return React.createElement('div',{style:{minHeight:'100vh'}},
+    React.createElement('div',{className:'page-header',style:{paddingTop:50}},
+      React.createElement('div',{className:'flex-between',style:{marginBottom:8}},
+        React.createElement('button',{onClick:onBack,style:{background:'none',border:'none',color:'var(--accent)',fontSize:15,cursor:'pointer'}},'← Назад'),
+        React.createElement('span',{className:'pill pill-accent'},'~75 хв')
       ),
-      React.createElement('h1', null, `${day.emoji} ${day.title}`),
-      React.createElement('p', null, day.subtitle)
+      React.createElement('h1',null,`${day.emoji} ${day.title}`),
+      React.createElement('p',null,day.subtitle)
     ),
 
-    // Phase tabs
-    React.createElement('div', { className: 'tab-row', style: { paddingTop: 12 } },
-      [
-        { id: 'warmup', label: '🔥 Розминка' },
-        { id: 'exercise', label: '💪 Вправи' },
-        { id: 'cardio', label: '🏃 Кардіо' },
-      ].map(p => React.createElement('button', { key: p.id, className: `tab-btn${phase === p.id ? ' active' : ''}`, onClick: () => setPhase(p.id) }, p.label))
+    React.createElement('div',{className:'tab-row',style:{paddingTop:12}},
+      [{id:'warmup',label:'🔥 Розминка'},{id:'exercise',label:'💪 Вправи'},{id:'cardio',label:'🏃 Кардіо'}]
+        .map(p=>React.createElement('button',{key:p.id,className:`tab-btn${phase===p.id?' active':''}`,onClick:()=>setPhase(p.id)},p.label))
     ),
 
-    phase === 'warmup' && React.createElement('div', { style: { padding: '0 16px 16px' } },
-      React.createElement('div', { className: 'card', style: { margin: 0 } },
-        React.createElement('div', { className: 'card-title' }, '⏱ 10 хвилин — ОБОВ\'ЯЗКОВО'),
-        React.createElement('div', { style: { fontSize: 14, lineHeight: 1.7, color: 'var(--text)' } },
-          day.warmup.split('\n').map((line, i) => React.createElement('div', { key: i, style: { marginBottom: 8, display: 'flex', gap: 8 } },
-            React.createElement('span', { style: { color: 'var(--accent)' } }, '•'),
-            React.createElement('span', null, line)
+    phase==='warmup'&&React.createElement('div',{style:{padding:'0 16px'}},
+      React.createElement('div',{className:'card',style:{margin:0}},
+        React.createElement('div',{className:'card-title'},'⏱ 10 хвилин — ОБОВ\'ЯЗКОВО'),
+        React.createElement('div',{style:{fontSize:14,lineHeight:1.8}},
+          day.warmup.split('\n').map((l,i)=>React.createElement('div',{key:i,style:{display:'flex',gap:8,marginBottom:6}},
+            React.createElement('span',{style:{color:'var(--accent)'}},`${i+1}.`),
+            React.createElement('span',null,l)
           ))
         ),
-        React.createElement('button', { className: 'btn-primary', onClick: () => setPhase('exercise') }, '✅ Розминка виконана — до вправ!')
+        React.createElement('button',{className:'btn-primary',onClick:()=>setPhase('exercise')},'✅ Розминка виконана — починаємо!')
       )
     ),
 
-    phase === 'exercise' && React.createElement('div', { style: { padding: '0 16px 16px' } },
-      day.blocks.map((block, bi) =>
-        React.createElement('div', { key: block.id, className: 'exercise-block' },
-          React.createElement('div', { className: 'block-header' },
-            React.createElement('h4', null, block.name),
-            React.createElement('p', null, block.desc)
-          ),
-          block.exercises.map(ex => {
-            const exSets = sets[ex.id] || initSetsForExercise(ex.id, ex);
-            return React.createElement('div', { key: ex.id, className: 'exercise-item' },
-              React.createElement('div', { className: 'ex-tag' }, ex.tag),
-              React.createElement('div', { className: 'ex-name' }, ex.name),
-              React.createElement('div', { className: 'ex-hint' }, ex.hint),
-              // Sets grid header
-              React.createElement('div', { className: 'sets-grid', style: { marginBottom: 4 } },
-                React.createElement('div', { className: 'col-header' }, 'Підхід'),
-                React.createElement('div', { className: 'col-header' }, ex.unit ? `Вага (${ex.unit})` : 'Повтори'),
-                React.createElement('div', { className: 'col-header' }, 'Повтори'),
-                React.createElement('div', null)
+    phase==='exercise'&&React.createElement('div',{style:{padding:'0 16px 16px'}},
+      day.blocks.map((block,bi)=>React.createElement('div',{key:block.id,className:'exercise-block'},
+        React.createElement('div',{className:'block-header'},
+          React.createElement('h4',null,block.name),
+          React.createElement('p',null,block.desc)
+        ),
+        block.exercises.map(ex=>{
+          const exSets=sets[ex.id]||[];
+          const isExpanded=expandedEx===ex.id;
+          return React.createElement('div',{key:ex.id,className:'exercise-item'},
+            React.createElement('div',{style:{cursor:'pointer'},onClick:()=>setExpandedEx(isExpanded?null:ex.id)},
+              React.createElement('div',{className:'flex-between'},
+                React.createElement('div',null,
+                  React.createElement('div',{className:'ex-tag'},ex.tag),
+                  React.createElement('div',{className:'ex-name'},ex.name)
+                ),
+                React.createElement('div',{style:{fontSize:18,color:'var(--accent)'}},isExpanded?'▲':'▼')
               ),
-              exSets.map((s, si) =>
-                React.createElement('div', { key: si, className: 'sets-grid', style: { marginBottom: 6 } },
-                  React.createElement('div', { className: 'set-label' }, `${si + 1}`),
-                  ex.unit
-                    ? React.createElement('input', { type: 'number', className: 'set-input', value: s.weight, onChange: e => { updateSet(ex.id, si, 'weight', parseFloat(e.target.value) || 0); } })
-                    : React.createElement('div', { className: 'set-input', style: { display: 'flex', alignItems: 'center', justifyContent: 'center' } }, '—'),
-                  React.createElement('input', { type: 'number', className: 'set-input', value: s.reps, onChange: e => { updateSet(ex.id, si, 'reps', parseInt(e.target.value) || 0); } }),
-                  React.createElement('button', { className: `set-done-btn${s.done ? ' done' : ''}`, onClick: () => toggleSetDone(ex.id, si) },
-                    React.createElement('svg', { viewBox: '0 0 24 24', fill: 'none', stroke: '#fff', strokeWidth: 2.5, width: 16, height: 16 },
-                      React.createElement('polyline', { points: '20 6 9 17 4 12' })
-                    )
+              React.createElement('div',{style:{display:'flex',gap:6,marginTop:6}},
+                exSets.map((s,si)=>React.createElement('div',{key:si,
+                  style:{flex:1,background:s.done?'rgba(16,185,129,0.2)':'var(--bg3)',borderRadius:8,padding:'6px 4px',textAlign:'center',border:`1px solid ${s.done?'var(--green)':'var(--border)'}`}},
+                  React.createElement('div',{style:{fontSize:10,color:'var(--text2)'}},`${si+1}`),
+                  React.createElement('div',{style:{fontSize:13,fontWeight:600}},ex.unit?`${s.weight}кг`:'-'),
+                  React.createElement('div',{style:{fontSize:11,color:'var(--text2)'}},`×${s.reps}`)
+                ))
+              )
+            ),
+            isExpanded&&React.createElement('div',{style:{marginTop:12}},
+              React.createElement('div',{className:'ex-hint'},ex.hint),
+              React.createElement(MuscleDiagram,{muscles:ex.muscles}),
+              React.createElement('div',{className:'sets-grid',style:{marginBottom:4}},
+                React.createElement('div',{className:'col-header'},'№'),
+                React.createElement('div',{className:'col-header'},ex.unit?`Вага (${ex.unit})`:'—'),
+                React.createElement('div',{className:'col-header'},'Повтори'),
+                React.createElement('div',null)
+              ),
+              exSets.map((s,si)=>React.createElement('div',{key:si,className:'sets-grid',style:{marginBottom:6}},
+                React.createElement('div',{className:'set-label'},si+1),
+                ex.unit
+                  ?React.createElement('input',{type:'number',className:'set-input',value:s.weight,onChange:e=>updateSet(ex.id,si,'weight',parseFloat(e.target.value)||0)})
+                  :React.createElement('div',{className:'set-input',style:{display:'flex',alignItems:'center',justifyContent:'center',opacity:0.4}},'—'),
+                React.createElement('input',{type:'number',className:'set-input',value:s.reps,onChange:e=>updateSet(ex.id,si,'reps',parseInt(e.target.value)||0)}),
+                React.createElement('button',{className:`set-done-btn${s.done?' done':''}`,onClick:()=>toggleDone(ex.id,si)},
+                  React.createElement('svg',{viewBox:'0 0 24 24',fill:'none',stroke:'#fff',strokeWidth:2.5,width:16,height:16},
+                    React.createElement('polyline',{points:'20 6 9 17 4 12'})
                   )
                 )
-              ),
-              React.createElement('div', { className: 'text-xs', style: { marginTop: 8, color: 'var(--orange)' } }, `⏱ Відпочинок між підходами: ${block.rest} сек`)
-            );
-          }),
-          bi < day.blocks.length - 1 && React.createElement('div', { style: { textAlign: 'center', padding: '8px 0', color: 'var(--text2)', fontSize: 12 } }, '⏳ 2–3 хв відпочинок між блоками')
-        )
-      ),
-      React.createElement('button', { className: 'btn-primary', onClick: () => setPhase('cardio') }, '✅ Вправи виконані — до кардіо!')
-    ),
-
-    phase === 'cardio' && React.createElement('div', { style: { padding: '0 16px 16px' } },
-      React.createElement('div', { className: 'card', style: { margin: 0 } },
-        React.createElement('div', { className: 'card-title' }, `🏃 КАРДІО — ${day.cardio.duration} хвилин`),
-        React.createElement('div', { className: 'text-sm', style: { marginBottom: 14 } }, day.cardio.desc),
-        React.createElement('div', { className: 'cardio-title' }, 'Оцініть складність:'),
-        React.createElement('div', { className: 'cardio-options' },
-          CARDIO_OPTIONS.map(opt => React.createElement('div', { key: opt.id, className: `cardio-opt${cardio === opt.id ? ' selected' : ''}`, onClick: () => setCardio(opt.id) },
-            React.createElement('div', { className: 'c-icon' }, opt.icon),
-            React.createElement('div', { className: 'c-label' }, opt.label),
-            React.createElement('div', { style: { fontSize: 9, color: 'var(--text2)', marginTop: 2 } }, `+${opt.xp} XP`)
-          ))
-        ),
-        React.createElement('div', { style: { marginTop: 16, padding: 12, background: 'rgba(59,130,246,0.1)', borderRadius: 12, fontSize: 13, color: 'var(--text2)' } },
-          '💊 Після кардіо прийняти 5 г креатину + воду!'
-        ),
-        React.createElement('button', { className: 'btn-primary', onClick: handleFinish }, '🎉 Тренування завершено! Зберегти')
-      )
-    )
-  );
-}
-
-// ─── PROGRESS TAB ─────────────────────────────────────────────────────────────
-function ProgressTab({ weights, setWeights, workouts, addXP }) {
-  const [newWeight, setNewWeight] = useState('');
-  const [histTab, setHistTab] = useState('weight');
-
-  const addWeight = () => {
-    const val = parseFloat(newWeight);
-    if (!val || val < 40 || val > 300) return;
-    const entry = { date: today(), value: val };
-    setWeights(prev => {
-      const next = [...prev, entry];
-      save(KEYS.weights, next);
-      return next;
-    });
-    setNewWeight('');
-    if (weights.length === 0) addXP(50, 'Перший запис ваги');
-  };
-
-  const lastWeight = weights.length > 0 ? weights[weights.length - 1].value : null;
-  const startWeight = weights.length > 0 ? weights[0].value : null;
-  const diff = startWeight && lastWeight ? (lastWeight - startWeight) : null;
-  const recentWeights = weights.slice(-20);
-
-  return React.createElement('div', null,
-    React.createElement('div', { className: 'page-header' },
-      React.createElement('h1', null, '📊 Прогрес'),
-      React.createElement('p', null, 'Відстежуй свій шлях до мети')
-    ),
-
-    // Weight input
-    React.createElement('div', { className: 'card' },
-      React.createElement('div', { className: 'card-title' }, '⚖️ Моя вага'),
-      React.createElement('div', { className: 'weight-input-row' },
-        React.createElement('input', { type: 'number', className: 'big-input', placeholder: 'кг', value: newWeight, onChange: e => setNewWeight(e.target.value), step: '0.1' }),
-        React.createElement('button', { className: 'add-btn', onClick: addWeight }, '+ Додати')
-      ),
-      lastWeight && React.createElement('div', { style: { marginTop: 12, display: 'flex', gap: 16 } },
-        React.createElement('div', null,
-          React.createElement('div', { className: 'text-xs' }, 'Зараз'),
-          React.createElement('div', { style: { fontSize: 22, fontWeight: 700 } }, `${lastWeight} кг`)
-        ),
-        startWeight && diff !== null && React.createElement('div', null,
-          React.createElement('div', { className: 'text-xs' }, 'Зміна'),
-          React.createElement('div', { style: { fontSize: 22, fontWeight: 700, color: diff < 0 ? 'var(--green)' : diff > 0 ? 'var(--red)' : 'var(--text)' } }, `${diff > 0 ? '+' : ''}${diff.toFixed(1)} кг`)
-        )
-      )
-    ),
-
-    // Weight chart
-    weights.length >= 2 && React.createElement('div', { className: 'card' },
-      React.createElement('div', { className: 'card-title' }, '📈 Графік ваги'),
-      React.createElement('div', { className: 'mini-chart' },
-        React.createElement(LineChart, { data: recentWeights, color: '#6c63ff' })
-      ),
-      React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--text2)', marginTop: 4 } },
-        React.createElement('span', null, formatDate(recentWeights[0].date)),
-        React.createElement('span', null, formatDate(recentWeights[recentWeights.length - 1].date))
-      )
-    ),
-
-    // History tabs
-    React.createElement('div', { className: 'card' },
-      React.createElement('div', { className: 'card-title' }, '📋 Історія'),
-      React.createElement('div', { style: { display: 'flex', gap: 8, marginBottom: 12 } },
-        React.createElement('button', { className: `tab-btn${histTab === 'weight' ? ' active' : ''}`, onClick: () => setHistTab('weight') }, '⚖️ Вага'),
-        React.createElement('button', { className: `tab-btn${histTab === 'workouts' ? ' active' : ''}`, onClick: () => setHistTab('workouts') }, '💪 Тренування')
-      ),
-      histTab === 'weight'
-        ? React.createElement('div', null,
-            weights.length === 0
-              ? React.createElement('div', { className: 'text-xs', style: { textAlign: 'center', padding: 20 } }, 'Ще немає записів ваги. Внеси свою вагу вище!')
-              : [...weights].reverse().slice(0, 15).map((w, i) =>
-                  React.createElement('div', { key: i, className: 'history-item' },
-                    React.createElement('div', null,
-                      React.createElement('div', { className: 'history-date' }, formatDate(w.date)),
-                      React.createElement('div', { className: 'history-day' }, `${w.value} кг`)
-                    ),
-                    i < weights.length - 1 && React.createElement('div', { className: 'history-stats' },
-                      (() => {
-                        const prev = [...weights].reverse()[i + 1];
-                        const d = w.value - prev.value;
-                        return React.createElement('span', { style: { color: d < 0 ? 'var(--green)' : d > 0 ? 'var(--red)' : 'var(--text2)' } }, `${d > 0 ? '+' : ''}${d.toFixed(1)} кг`);
-                      })()
-                    )
-                  )
-                )
-          )
-        : React.createElement('div', null,
-            workouts.length === 0
-              ? React.createElement('div', { className: 'text-xs', style: { textAlign: 'center', padding: 20 } }, 'Ще немає записаних тренувань. Розпочни своє перше!')
-              : [...workouts].reverse().slice(0, 20).map((w, i) => {
-                  const d = TRAINING_DAYS[w.dayId];
-                  if (!d) return null;
-                  const totalSets = Object.values(w.sets || {}).reduce((a, s) => a + s.filter(x => x.done).length, 0);
-                  return React.createElement('div', { key: i, className: 'history-item' },
-                    React.createElement('div', null,
-                      React.createElement('div', { className: 'history-date' }, formatDate(w.date)),
-                      React.createElement('div', { className: 'history-day' }, `${d.emoji} ${d.title}`)
-                    ),
-                    React.createElement('div', { className: 'history-stats' },
-                      React.createElement('div', null, `${totalSets} підходів`),
-                      React.createElement('div', { style: { color: 'var(--accent)' } }, w.cardio || '')
-                    )
-                  );
-                })
-          )
-    )
-  );
-}
-
-// ─── ACHIEVEMENTS TAB ─────────────────────────────────────────────────────────
-function AchievementsTab({ unlockedAch, stats }) {
-  const unlocked = ACHIEVEMENTS.filter(a => unlockedAch.includes(a.id));
-  return React.createElement('div', null,
-    React.createElement('div', { className: 'page-header' },
-      React.createElement('h1', null, '🏆 Досягнення'),
-      React.createElement('p', null, `Розблоковано ${unlocked.length} з ${ACHIEVEMENTS.length}`)
-    ),
-    React.createElement('div', { className: 'card' },
-      React.createElement('div', { className: 'streak-display' },
-        React.createElement('div', { className: 'streak-fire' }, '🔥'),
-        React.createElement('div', null,
-          React.createElement('div', { className: 'streak-num' }, stats.streak),
-          React.createElement('div', { className: 'streak-label' }, 'днів поспіль')
-        ),
-        React.createElement('div', { style: { marginLeft: 'auto', textAlign: 'right' } },
-          React.createElement('div', { className: 'text-xs' }, 'Цього тижня'),
-          React.createElement('div', { style: { fontSize: 22, fontWeight: 700, color: 'var(--green)' } }, `${stats.weekWorkouts}/4`)
-        )
-      )
-    ),
-    React.createElement('div', { style: { padding: '0 16px 16px' } },
-      React.createElement('div', { className: 'achievements-grid' },
-        ACHIEVEMENTS.map(a => {
-          const isUnlocked = unlockedAch.includes(a.id);
-          return React.createElement('div', { key: a.id, className: `achievement${isUnlocked ? ' unlocked' : ''}` },
-            React.createElement('div', { className: 'ach-icon' }, a.icon),
-            React.createElement('div', { className: 'ach-name' }, a.name),
-            React.createElement('div', { className: 'ach-desc' }, a.desc),
-            isUnlocked && React.createElement('div', { style: { marginTop: 6, fontSize: 10, color: 'var(--gold)', fontWeight: 600 } }, '✓ Розблоковано')
+              )),
+              React.createElement('div',{className:'text-xs',style:{marginTop:8,color:'var(--orange)'}},`⏱ Відпочинок між підходами: ${block.rest} сек`)
+            )
           );
-        })
+        }),
+        bi<day.blocks.length-1&&React.createElement('div',{style:{textAlign:'center',padding:'8px 0',color:'var(--text2)',fontSize:12}},'⏳ 2–3 хвилини відпочинку між блоками')
+      )),
+      React.createElement('button',{className:'btn-primary',onClick:()=>setPhase('cardio')},'✅ Вправи виконані → Кардіо')
+    ),
+
+    phase==='cardio'&&React.createElement('div',{style:{padding:'0 16px 16px'}},
+      React.createElement('div',{className:'card',style:{margin:0}},
+        React.createElement('div',{className:'card-title'},`🏃 КАРДІО — ${day.cardio.duration} хвилин`),
+        React.createElement('div',{className:'text-sm',style:{marginBottom:14}},day.cardio.desc),
+        React.createElement('div',{style:{fontWeight:600,fontSize:13,marginBottom:10}},'Оцініть складність:'),
+        React.createElement('div',{className:'cardio-options'},
+          CARDIO_OPTIONS.map(o=>React.createElement('div',{key:o.id,className:`cardio-opt${cardio===o.id?' selected':''}`,onClick:()=>setCardio(o.id)},
+            React.createElement('div',{className:'c-icon'},o.icon),
+            React.createElement('div',{className:'c-label'},o.label),
+            React.createElement('div',{style:{fontSize:9,color:'var(--text2)',marginTop:2}},`+${o.xp} XP`)
+          ))
+        ),
+        React.createElement('div',{style:{marginTop:12,padding:12,background:'rgba(59,130,246,0.1)',borderRadius:12,fontSize:13,color:'var(--text2)'}},
+          '💊 Після кардіо: 5 г креатину + вода!'
+        ),
+        React.createElement('button',{className:'btn-primary',style:{marginTop:16},onClick:()=>onSave({...workout,sets,cardio})},'🎉 Завершити та зберегти')
       )
     )
   );
 }
 
-// ─── BOTTOM NAV ───────────────────────────────────────────────────────────────
-function BottomNav({ tab, setTab }) {
-  const items = [
-    { id: 'home', label: 'Головна', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-    { id: 'train', label: 'Тренування', icon: 'M4 6h16M4 10h16M4 14h16M4 18h16' },
-    { id: 'progress', label: 'Прогрес', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
-    { id: 'achievements', label: 'Нагороди', icon: 'M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z' },
-  ];
-  return React.createElement('nav', { className: 'bottom-nav' },
-    items.map(item => React.createElement('button', { key: item.id, className: `nav-btn${tab === item.id ? ' active' : ''}`, onClick: () => setTab(item.id) },
-      React.createElement('svg', { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round' },
-        React.createElement('path', { d: item.icon })
+// ── CALENDAR TAB ──────────────────────────────────────────────────────────────
+function CalendarTab({workouts,onSelect}){
+  const [year,setYear]=useState(new Date().getFullYear());
+  const [month,setMonth]=useState(new Date().getMonth());
+  const t=todayStr();
+
+  const monthName=['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'][month];
+  const firstDay=new Date(year,month,1).getDay();
+  const offset=firstDay===0?6:firstDay-1;
+  const daysInMonth=new Date(year,month+1,0).getDate();
+  const cells=Array.from({length:offset+daysInMonth},(_,i)=>i<offset?null:i-offset+1);
+
+  const workoutsByDate={};
+  for(const w of workouts){
+    const d=new Date(w.date+'T12:00:00');
+    if(d.getFullYear()===year&&d.getMonth()===month){
+      workoutsByDate[d.getDate()]=w;
+    }
+  }
+
+  const prev=()=>{if(month===0){setMonth(11);setYear(y=>y-1);}else setMonth(m=>m-1);};
+  const next=()=>{if(month===11){setMonth(0);setYear(y=>y+1);}else setMonth(m=>m+1);};
+
+  const todayDate=new Date();
+  const isCurrentMonth=year===todayDate.getFullYear()&&month===todayDate.getMonth();
+
+  // Monthly stats
+  const monthWorkouts=Object.values(workoutsByDate);
+  const avgScore=monthWorkouts.length>0?Math.round(monthWorkouts.reduce((a,w)=>a+(w.score||calcScore(w)),0)/monthWorkouts.length):0;
+
+  return React.createElement('div',null,
+    React.createElement('div',{className:'page-header'},
+      React.createElement('h1',null,'📅 Календар'),
+      React.createElement('p',null,'Натисни на день щоб побачити деталі')
+    ),
+
+    React.createElement('div',{className:'cal-nav'},
+      React.createElement('button',{onClick:prev},'‹'),
+      React.createElement('span',null,`${monthName} ${year}`),
+      React.createElement('button',{onClick:next},'›')
+    ),
+
+    monthWorkouts.length>0&&React.createElement('div',{className:'stats-row'},
+      React.createElement('div',{className:'stat-card'},React.createElement('div',{className:'stat-val'},monthWorkouts.length),React.createElement('div',{className:'stat-label'},'Тренувань')),
+      React.createElement('div',{className:'stat-card'},React.createElement('div',{className:'stat-val'},`${avgScore}`),React.createElement('div',{className:'stat-label'},'Сер. оцінка')),
+      React.createElement('div',{className:'stat-card'},React.createElement('div',{className:'stat-val'},Math.round(monthWorkouts.reduce((a,w)=>a+(w.volume||0),0))),React.createElement('div',{className:'stat-label'},'Об\'єм кг'))
+    ),
+
+    React.createElement('div',{className:'cal-grid',style:{padding:'0 16px 8px'}},
+      ['Пн','Вт','Ср','Чт','Пт','Сб','Нд'].map(d=>React.createElement('div',{key:d,className:'cal-hdr'},d))
+    ),
+    React.createElement('div',{className:'cal-grid'},
+      cells.map((day,i)=>{
+        if(!day)return React.createElement('div',{key:`e${i}`,className:'cal-day empty'});
+        const ds=`${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+        const w=workoutsByDate[day];
+        const isT=ds===t;
+        let cls='cal-day';
+        if(isT)cls+=' today';
+        else if(w)cls+=' has-workout';
+        const score=w?(w.score||calcScore(w)):null;
+        const grade=score!==null?scoreGrade(score):null;
+        return React.createElement('div',{key:ds,className:cls,onClick:w?()=>onSelect(w):undefined},
+          React.createElement('span',null,day),
+          grade&&React.createElement('div',{style:{fontSize:8,fontWeight:700,color:isT?'#fff':grade.g==='S'?'var(--gold)':grade.g==='A'?'var(--accent)':grade.g==='B'?'var(--blue)':'var(--text2)'}},grade.g)
+        );
+      })
+    ),
+
+    React.createElement('div',{style:{padding:'16px 16px 0'}},
+      React.createElement('div',{className:'card-title',style:{padding:'0 0 8px'}},
+        monthWorkouts.length>0?`Тренування у ${monthName.toLowerCase()}:`:'Немає тренувань у цьому місяці'
       ),
-      React.createElement('span', null, item.label)
+      [...monthWorkouts].sort((a,b)=>b.date.localeCompare(a.date)).map((w,i)=>{
+        const d=TRAINING_DAYS[w.dayId];if(!d)return null;
+        const score=w.score||calcScore(w);
+        const gr=scoreGrade(score);
+        return React.createElement('div',{key:i,className:'history-item',style:{cursor:'pointer'},onClick:()=>onSelect(w)},
+          React.createElement('div',null,
+            React.createElement('div',{className:'history-date'},fmtDate(w.date)),
+            React.createElement('div',{className:'history-day'},`${d.emoji} ${d.title}`)
+          ),
+          React.createElement('div',{style:{display:'flex',alignItems:'center',gap:8}},
+            React.createElement('div',{className:'history-stats'},
+              React.createElement('div',null,`${w.volume||0} кг об.`),
+              React.createElement('div',{style:{color:'var(--text2)',fontSize:10}},w.cardio||'')
+            ),
+            React.createElement('div',{className:`score-badge ${gr.cls}`,style:{width:40,height:40,fontSize:16}},gr.g)
+          )
+        );
+      })
+    )
+  );
+}
+
+// ── WORKOUT DETAIL MODAL ──────────────────────────────────────────────────────
+function WorkoutDetailModal({workout,onClose}){
+  const day=TRAINING_DAYS[workout.dayId];
+  if(!day)return null;
+  const score=workout.score||calcScore(workout);
+  const gr=scoreGrade(score);
+  const vol=workout.volume||calcVolume(workout);
+  const allEx=day.blocks.flatMap(b=>b.exercises);
+  const totalSets=allEx.reduce((a,ex)=>{const s=workout.sets?.[ex.id]||[];return a+s.length;},0);
+  const doneSets=allEx.reduce((a,ex)=>{const s=workout.sets?.[ex.id]||[];return a+s.filter(x=>x.done).length;},0);
+
+  return React.createElement('div',{className:'modal-overlay',onClick:onClose},
+    React.createElement('div',{className:'modal-sheet',onClick:e=>e.stopPropagation()},
+      React.createElement('div',{className:'modal-handle'}),
+      React.createElement('div',{className:'flex-between',style:{marginBottom:16}},
+        React.createElement('div',null,
+          React.createElement('div',{className:'text-xs'},fmtDateFull(workout.date)),
+          React.createElement('div',{className:'modal-title',style:{margin:'4px 0 0'}},`${day.emoji} ${day.title}`)
+        ),
+        React.createElement('div',{className:`score-badge ${gr.cls}`},
+          React.createElement('div',{style:{fontSize:22,fontWeight:800}},gr.g),
+          React.createElement('div',{style:{fontSize:9}},`${score}`)
+        )
+      ),
+
+      // Stats row
+      React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8,marginBottom:16}},
+        React.createElement('div',{style:{background:'var(--bg2)',borderRadius:10,padding:10,textAlign:'center'}},
+          React.createElement('div',{style:{fontSize:18,fontWeight:700,color:'var(--accent)'}},`${doneSets}/${totalSets}`),
+          React.createElement('div',{className:'text-xs'},'Підходів')
+        ),
+        React.createElement('div',{style:{background:'var(--bg2)',borderRadius:10,padding:10,textAlign:'center'}},
+          React.createElement('div',{style:{fontSize:18,fontWeight:700,color:'var(--green)'}},vol),
+          React.createElement('div',{className:'text-xs'},'кг об\'єм')
+        ),
+        React.createElement('div',{style:{background:'var(--bg2)',borderRadius:10,padding:10,textAlign:'center'}},
+          React.createElement('div',{style:{fontSize:18,fontWeight:700,color:'var(--orange)'}},
+            CARDIO_OPTIONS.find(c=>c.id===workout.cardio)?.icon||'🚶'
+          ),
+          React.createElement('div',{className:'text-xs'},
+            CARDIO_OPTIONS.find(c=>c.id===workout.cardio)?.label||''
+          )
+        )
+      ),
+
+      // Exercises detail
+      day.blocks.flatMap(b=>b.exercises).map(ex=>{
+        const exSets=workout.sets?.[ex.id]||[];
+        if(!exSets.length)return null;
+        const exVol=exSets.filter(s=>s.done&&s.weight>0).reduce((a,s)=>a+s.weight*s.reps,0);
+        return React.createElement('div',{key:ex.id,style:{marginBottom:14}},
+          React.createElement('div',{className:'flex-between',style:{marginBottom:8}},
+            React.createElement('div',null,
+              React.createElement('div',{style:{fontSize:13,fontWeight:600}},ex.name),
+              React.createElement('div',{className:'text-xs'},ex.tag)
+            ),
+            exVol>0&&React.createElement('div',{className:'text-xs'},`${exVol} кг`)
+          ),
+          exSets.map((s,si)=>React.createElement('div',{key:si,className:'wk-detail-set'},
+            React.createElement('div',{className:`set-num${s.done?' done':''}`},si+1),
+            React.createElement('div',{style:{flex:1,fontSize:13}},
+              ex.unit?`${s.weight} кг × ${s.reps} повт.`:`${s.reps} повторень`
+            ),
+            s.done&&React.createElement('div',{style:{fontSize:12,color:'var(--green)'}},'✓')
+          ))
+        );
+      }),
+
+      React.createElement('button',{className:'btn-secondary',style:{marginTop:16},onClick:onClose},'Закрити')
+    )
+  );
+}
+
+// ── PROGRESS TAB ──────────────────────────────────────────────────────────────
+function ProgressTab({weights,setWeights,workouts,showToast,profile,unlockedAch,stats}){
+  const [newWeight,setNewWeight]=useState('');
+  const [view,setView]=useState('weight');
+
+  const addWeight=()=>{
+    const v=parseFloat(newWeight);
+    if(!v||v<30||v>400)return;
+    const entry={date:todayStr(),value:v};
+    const next=[...weights,entry];
+    setWeights(next);LS.save('gb_weights',next);
+    setNewWeight('');
+    if(weights.length===0)showToast('+50 XP — перший запис ваги!');
+  };
+
+  const lastW=weights.length>0?weights[weights.length-1].value:null;
+  const startW=weights.length>0?weights[0].value:null;
+  const diff=startW&&lastW?(lastW-startW):null;
+  const recent=weights.slice(-20);
+
+  const scores=workouts.map(w=>({date:w.date,value:w.score||calcScore(w)})).slice(-20);
+
+  return React.createElement('div',null,
+    React.createElement('div',{className:'page-header'},
+      React.createElement('h1',null,'📊 Прогрес'),
+      React.createElement('p',null,'Відстежуй свій шлях')
+    ),
+
+    React.createElement('div',{className:'tab-row',style:{paddingTop:12}},
+      [{id:'weight',l:'⚖️ Вага'},{id:'scores',l:'⭐ Оцінки'},{id:'ach',l:'🏆 Нагороди'}]
+        .map(t=>React.createElement('button',{key:t.id,className:`tab-btn${view===t.id?' active':''}`,onClick:()=>setView(t.id)},t.l))
+    ),
+
+    view==='weight'&&React.createElement('div',null,
+      React.createElement('div',{className:'card'},
+        React.createElement('div',{className:'card-title'},'⚖️ Моя вага'),
+        React.createElement('div',{className:'weight-input-row'},
+          React.createElement('input',{type:'number',className:'big-input',placeholder:'кг',value:newWeight,onChange:e=>setNewWeight(e.target.value),step:'0.1'}),
+          React.createElement('button',{className:'add-btn',onClick:addWeight},'+ Додати')
+        ),
+        lastW&&React.createElement('div',{style:{marginTop:12,display:'flex',gap:20,flexWrap:'wrap'}},
+          React.createElement('div',null,React.createElement('div',{className:'text-xs'},'Зараз'),React.createElement('div',{style:{fontSize:22,fontWeight:700}},`${lastW} кг`)),
+          startW&&diff!==null&&React.createElement('div',null,React.createElement('div',{className:'text-xs'},'Зміна'),React.createElement('div',{style:{fontSize:22,fontWeight:700,color:diff<0?'var(--green)':diff>0?'var(--red)':'var(--text)'}},`${diff>0?'+':''}${diff.toFixed(1)} кг`)),
+          startW&&React.createElement('div',null,React.createElement('div',{className:'text-xs'},'Старт'),React.createElement('div',{style:{fontSize:22,fontWeight:700,color:'var(--text2)'}},`${startW} кг`))
+        )
+      ),
+      weights.length>=2&&React.createElement('div',{className:'card'},
+        React.createElement('div',{className:'card-title'},'📈 Графік ваги'),
+        React.createElement('div',{className:'mini-chart'},React.createElement(LineChart,{data:recent,color:'#6c63ff'})),
+        React.createElement('div',{style:{display:'flex',justifyContent:'space-between',fontSize:11,color:'var(--text2)',marginTop:4}},
+          React.createElement('span',null,fmtDate(recent[0].date)),
+          React.createElement('span',null,fmtDate(recent[recent.length-1].date))
+        )
+      ),
+      React.createElement('div',{className:'card'},
+        React.createElement('div',{className:'card-title'},'📋 Історія ваги'),
+        weights.length===0
+          ?React.createElement('div',{className:'text-xs',style:{textAlign:'center',padding:20}},'Ще немає записів. Внеси свою вагу вище!')
+          :[...weights].reverse().slice(0,20).map((w,i,arr)=>{
+              const prev=arr[i+1];
+              const d=prev?(w.value-prev.value):null;
+              return React.createElement('div',{key:i,className:'history-item'},
+                React.createElement('div',null,React.createElement('div',{className:'history-date'},fmtDate(w.date)),React.createElement('div',{className:'history-day'},`${w.value} кг`)),
+                d!==null&&React.createElement('span',{style:{color:d<0?'var(--green)':d>0?'var(--red)':'var(--text2)',fontWeight:600,fontSize:13}},`${d>0?'+':''}${d.toFixed(1)} кг`)
+              );
+            })
+      )
+    ),
+
+    view==='scores'&&React.createElement('div',null,
+      scores.length>=2&&React.createElement('div',{className:'card'},
+        React.createElement('div',{className:'card-title'},'⭐ Динаміка оцінок'),
+        React.createElement('div',{className:'mini-chart'},React.createElement(LineChart,{data:scores,color:'#fbbf24'}))
+      ),
+      React.createElement('div',{className:'card'},
+        React.createElement('div',{className:'card-title'},'Всі тренування'),
+        workouts.length===0
+          ?React.createElement('div',{className:'text-xs',style:{textAlign:'center',padding:20}},'Ще немає тренувань')
+          :[...workouts].reverse().slice(0,30).map((w,i)=>{
+              const d=TRAINING_DAYS[w.dayId];if(!d)return null;
+              const score=w.score||calcScore(w);
+              const gr=scoreGrade(score);
+              return React.createElement('div',{key:i,className:'history-item'},
+                React.createElement('div',null,React.createElement('div',{className:'history-date'},fmtDate(w.date)),React.createElement('div',{className:'history-day'},`${d.emoji} ${d.title}`)),
+                React.createElement('div',{style:{display:'flex',alignItems:'center',gap:8}},
+                  React.createElement('div',{className:'history-stats'},React.createElement('div',null,`${w.volume||0} кг`)),
+                  React.createElement('div',{className:`score-badge ${gr.cls}`,style:{width:36,height:36,fontSize:14}},gr.g)
+                )
+              );
+            })
+      )
+    ),
+
+    view==='ach'&&React.createElement('div',null,
+      React.createElement('div',{className:'card'},
+        React.createElement('div',{className:'flex-between'},
+          React.createElement('div',null,
+            React.createElement('div',{className:'card-title'},'🔥 Поточна серія'),
+            React.createElement('div',{style:{fontSize:36,fontWeight:700,color:'var(--orange)'}},`${stats.streak} днів`)
+          ),
+          React.createElement('div',{style:{textAlign:'right'}},
+            React.createElement('div',{className:'text-xs'},'Цього тижня'),
+            React.createElement('div',{style:{fontSize:28,fontWeight:700,color:'var(--green)'}},`${stats.week}/4`)
+          )
+        )
+      ),
+      React.createElement('div',{style:{padding:'0 16px'}},
+        React.createElement('div',{className:'ach-grid'},
+          ACHIEVEMENTS.map(a=>{
+            const ok=unlockedAch.includes(a.id);
+            return React.createElement('div',{key:a.id,className:`ach-item${ok?' unlocked':''}`},
+              React.createElement('div',{className:'ach-icon'},a.icon),
+              React.createElement('div',{className:'ach-name'},a.name),
+              React.createElement('div',{className:'ach-desc'},a.desc),
+              ok&&React.createElement('div',{style:{marginTop:6,fontSize:10,color:'var(--gold)',fontWeight:600}},'✓ Розблоковано')
+            );
+          })
+        )
+      )
+    )
+  );
+}
+
+// ── BOTTOM NAV ────────────────────────────────────────────────────────────────
+function BottomNav({tab,setTab}){
+  const items=[
+    {id:'home',l:'Головна',p:'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'},
+    {id:'train',l:'Тренування',p:'M4 6h16M4 10h16M4 14h16M4 18h16'},
+    {id:'calendar',l:'Календар',p:'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'},
+    {id:'progress',l:'Прогрес',p:'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'},
+  ];
+  return React.createElement('nav',{className:'bottom-nav'},
+    items.map(it=>React.createElement('button',{key:it.id,className:`nav-btn${tab===it.id?' active':''}`,onClick:()=>setTab(it.id)},
+      React.createElement('svg',{viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.8,strokeLinecap:'round',strokeLinejoin:'round'},
+        React.createElement('path',{d:it.p})
+      ),
+      React.createElement('span',null,it.l)
     ))
   );
 }
 
-// ─── RENDER ───────────────────────────────────────────────────────────────────
+// ── RENDER ────────────────────────────────────────────────────────────────────
 ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
-}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
 </html>
