@@ -390,7 +390,6 @@ function getRecommendedWeight(exId,prevWorkouts){
   if(done>=sets.length-1)return{weight:w,hint:`= Тримай ${w} кг`,color:'var(--orange)'};
   return{weight:Math.max(0,w-2.5),hint:`↓ Знизь до ${Math.max(0,w-2.5)} кг`,color:'var(--red)'};
 }
-}
 
 // ── MUSCLE SVG ───────────────────────────────────────────────────────────────
 const MUSCLE_COLORS={
